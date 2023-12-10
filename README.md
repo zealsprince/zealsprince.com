@@ -21,7 +21,7 @@ You can find me and my work in the following places:
 
 ## Catlinman ##
 
-If you're looking for my previous work under my alias _Catlinman_ you can find that over at [catlinman.com](catlinman.com).
+If you're looking for my previous work under my alias _Catlinman_ you can find that over at [catlinman.com](https://catlinman.com).
 
 ----
 
