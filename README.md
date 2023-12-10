@@ -14,6 +14,7 @@ Your best bet of reaching me is by sending me an email over to [andrew@zealsprin
 
 You can find me and my work in the following places:
 
+- [GitHub](https://github.com/zealsprince/)
 - [LinkedIn](https://www.linkedin.com/in/zealsprince/)
 - [X](https://twitter.com/zealsprince)
 - [DeviantArt](https://www.deviantart.com/zealsprince)
@@ -25,4 +26,4 @@ If you're looking for my previous work under my alias _Catlinman_ you can find t
 
 ----
 
-_At the moment this website is being hosted from a simple Markdown document hence the lack of visual flair. I'll replace it with something exciting and more engaging in the near future._
+_At the moment [this website is being hosted from a simple Markdown document](https://github.com/zealsprince/zealsprince.com/) hence the lack of visual flair. I'll replace it with something exciting and more engaging in the near future._
