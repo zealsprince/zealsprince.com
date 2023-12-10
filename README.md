@@ -18,9 +18,14 @@ You can find me and my work in the following places:
 
 - [GitHub](https://github.com/zealsprince/)
 - [LinkedIn](https://www.linkedin.com/in/zealsprince/)
-- [X](https://twitter.com/zealsprince)
 - [DeviantArt](https://www.deviantart.com/zealsprince)
 - [ArtStation](https://www.artstation.com/zealsprince)
+- [X](https://twitter.com/zealsprince)
+- [Instagram](https://www.instagram.com/zealsprince/)
+- [500px](https://500px.com/p/zealsprince?view=photos)
+- [Steam](https://steamcommunity.com/id/zealsprince)
+- [Snapchat](https://snapchat.com/add/zealsprince)
+
 
 ## Catlinman ##
 
