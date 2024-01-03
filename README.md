@@ -10,7 +10,7 @@ Alongside my engineering and development work I also create digital and physical
 
 Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
 
-Looking for my CVs? You can get them here: [English](https://github.com/zealsprince/zealsprince.com/files/13628115/CV.Andrew.Lake.2023.EN.NA.pdf) / [German](https://github.com/zealsprince/zealsprince.com/files/13628114/CV.Andrew.Lake.2023.DE.pdf)
+Looking for my CVs? You can get them here: [English](https://github.com/zealsprince/zealsprince.com/files/13819051/CV.Andrew.Lake.2023.EN.NA.Sanitized.pdf) / [German](https://github.com/zealsprince/zealsprince.com/files/13819049/CV.Andrew.Lake.2023.DE.Sanitized.pdf)
 
 ## Links ##
 
