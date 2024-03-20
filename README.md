@@ -4,14 +4,6 @@ I've spent over a decade working as a software engineer and architect, and it's 
 
 Alongside my engineering and development work I also create digital and physical art ranging from album covers all the way to motion graphics, animations and visualizations. I've also dipped my feet into music production to round things off. After all, I'm known as the "Andrew of all trades" and try to live up to that title.
 
-## Contact / Hiring ##
-
-**I am currently looking for the next big step in my career, if you would like to reach out with an opportunity, please get in contact with me!**
-
-Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
-
-Looking for my CVs? You can get them here: [English](https://github.com/zealsprince/zealsprince.com/files/13819051/CV.Andrew.Lake.2023.EN.NA.Sanitized.pdf) / [German](https://github.com/zealsprince/zealsprince.com/files/13819049/CV.Andrew.Lake.2023.DE.Sanitized.pdf)
-
 ## Links ##
 
 You can find me and my work in the following places:
@@ -26,6 +18,11 @@ You can find me and my work in the following places:
 - [Steam](https://steamcommunity.com/id/zealsprince)
 - [Snapchat](https://snapchat.com/add/zealsprince)
 
+## Contact ##
+
+Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
+
+Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/zealsprince/zealsprince.com/files/13819051/CV.Andrew.Lake.2023.EN.NA.Sanitized.pdf) / [German](https://github.com/zealsprince/zealsprince.com/files/13819049/CV.Andrew.Lake.2023.DE.Sanitized.pdf)
 
 ## Catlinman ##
 
