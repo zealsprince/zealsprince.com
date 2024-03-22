@@ -30,4 +30,4 @@ If you're looking for my previous work under my alias _Catlinman_ you can find t
 
 ----
 
-_At the moment [this website is being hosted from a simple Markdown document](https://github.com/zealsprince/zealsprince.com/) hence the lack of visual flair. I'll replace it with something exciting and more engaging in the near future._
+_At the moment [this website is being hosted from a simple Markdown document](https://github.com/zealsprince/zealsprince.com/) hence the lack of visual flair. I'll replace it with something exciting and more engaging in the near future!_
