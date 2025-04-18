@@ -22,7 +22,7 @@ You can find me and my work in the following places:
 
 Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
 
-Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/zealsprince/zealsprince.com/files/13819051/CV.Andrew.Lake.2023.EN.NA.Sanitized.pdf) / [German](https://github.com/zealsprince/zealsprince.com/files/13819049/CV.Andrew.Lake.2023.DE.Sanitized.pdf)
+Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/user-attachments/files/19816433/CV.Andrew.Lake.2025.EN.NA.Sanitized.pdf) / [German](https://github.com/user-attachments/files/19816432/CV.Andrew.Lake.2025.DE.Sanitized.pdf)
 
 ## Catlinman ##
 
