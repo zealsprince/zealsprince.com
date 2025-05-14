@@ -1,0 +1,22 @@
+{
+  "name": "zealsprince.com",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.13.0",
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/node": "^22.15.17",
+    "eslint": "^9.26.0",
+    "eslint-plugin-format": "^1.0.1",
+    "svelte": "^5.28.1",
+    "vite": "^6.3.5"
+  }
+}
