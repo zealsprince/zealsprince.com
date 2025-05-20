@@ -2,24 +2,23 @@
   import Content from "@/components/Content.svelte";
   export let data: { html: string; gallery: string[]; frontmatter: any };
 
-  // Placeholder for A-side p5.js sketch
+  // Placeholder for B-side p5.js sketch
   // You can replace this with a real p5.js or ThreeJS sketch
   import p5 from "p5";
 
   function sketch(p: p5) {
     p.setup = () => {
       p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
-      p.background(248, 249, 250);
+      p.background(16, 16, 20);
     };
-
     p.draw = () => {
-      p.background(248, 249, 250, 240);
-      p.rotateY(p.millis() / 2000);
+      p.background(16, 16, 20, 240);
+      p.rotateY(-p.millis() / 1200);
       p.noStroke();
-      p.ambientLight(200);
-      p.pointLight(255, 255, 255, 0, 0, 300);
-      p.specularMaterial(24, 26, 27);
-      p.sphere(120, 64, 64);
+      p.ambientLight(40, 0, 80);
+      p.pointLight(255, 0, 180, 0, 0, 300);
+      p.specularMaterial(200, 0, 180);
+      p.torus(120, 32, 64, 32);
     };
   }
 
@@ -35,4 +34,5 @@
 </script>
 
 <div id="landing-visual"></div>
+
 <Content {data} />
