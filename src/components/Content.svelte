@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { onDestroy } from "svelte";
-  import { get } from "svelte/store";
   import Gallery from "./Gallery.svelte";
   export let data: { html: string; gallery: string[]; frontmatter: any };
 

@@ -1,38 +1,10 @@
 <script lang="ts">
   import Content from "@/components/Content.svelte";
+  import Threalte from "@/components/Threalte.svelte";
   export let data: { html: string; gallery: string[]; frontmatter: any };
-
-  // Placeholder for A-side p5.js sketch
-  // You can replace this with a real p5.js or ThreeJS sketch
-  import p5 from "p5";
-
-  function sketch(p: p5) {
-    p.setup = () => {
-      p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
-      p.background(248, 249, 250);
-    };
-
-    p.draw = () => {
-      p.background(248, 249, 250, 240);
-      p.rotateY(p.millis() / 2000);
-      p.noStroke();
-      p.ambientLight(200);
-      p.pointLight(255, 255, 255, 0, 0, 300);
-      p.specularMaterial(24, 26, 27);
-      p.sphere(120, 64, 64);
-    };
-  }
-
-  const landingVisual = document.getElementById("landing-visual");
-  if (landingVisual) {
-    // eslint-disable-next-line new-cap
-    const p5Instance = new p5(sketch, landingVisual);
-
-    p5Instance.windowResized = () => {
-      p5Instance.resizeCanvas(window.innerWidth, window.innerHeight);
-    };
-  }
 </script>
 
-<div id="landing-visual"></div>
+<div id="landing-visual" style="width:100vw; height:100vh; position:relative;">
+  <Threalte scenePath="@/scenes/SceneA.svelte" />
+</div>
 <Content {data} />

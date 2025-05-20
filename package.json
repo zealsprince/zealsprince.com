@@ -9,13 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@threlte/core": "^8.0.4",
+    "@threlte/extras": "^9.2.1",
+    "@threlte/studio": "^0.1.7",
+    "@threlte/theatre": "^3.0.3",
     "gray-matter": "^4.0.3",
-    "install": "^0.13.0",
     "marked": "^15.0.11",
-    "mdsvex": "^0.12.6",
-    "npm": "^11.4.0",
-    "p5": "^2.0.2",
-    "three": "^0.176.0"
+    "p5": "^2.0.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.0",
@@ -23,10 +23,10 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tsconfig/svelte": "^5.0.4",
     "@types/node": "^22.15.17",
-    "@types/p5": "^1.7.6",
     "eslint": "^9.26.0",
     "eslint-plugin-format": "^1.0.1",
     "svelte": "^5.28.1",
+    "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }
 }

@@ -1,8 +1,17 @@
 {
-  "extends": "@tsconfig/svelte",
+  "extends": [
+    "@tsconfig/svelte",
+    "./.svelte-kit/tsconfig.json"
+  ],
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "paths": {
       "@/*": [
         "src/*"
@@ -10,10 +19,24 @@
       "@/components/*": [
         "src/components/*"
       ],
+      "@/scenes/*": [
+        "src/scenes/*"
+      ],
       "$lib/*": [
         "src/lib/*"
       ]
-    }
+    },
+    "resolveJsonModule": true,
+    "types": [
+      "vite/client"
+    ],
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.ts",
