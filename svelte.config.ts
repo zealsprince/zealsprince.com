@@ -11,7 +11,7 @@ export default {
       pages: 'build',
       assets: 'build',
       fallback: 'index.html', // or '200.html' or '404.html'
-      precompress: false,
+      precompress: true,
       strict: true,
     }),
     paths: {

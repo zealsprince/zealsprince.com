@@ -1,13 +1,14 @@
 ---
-title: "Andrew Lake"
-date: "2025-05-18"
-gallery:
-  - /images/project1.jpg
-  - /images/project2.jpg
-side: A
+navigation: About
+title: Andrew Lake
+date: 2025-05-18
+# gallery:
+  # - /images/project1.jpg
+  # - /images/project2.jpg
+scene: SceneIndex
+style: index
+order: 1
 ---
-
-Professional button presser.
 
 ## About Me
 

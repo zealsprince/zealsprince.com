@@ -9,7 +9,7 @@
   }}
 />
 
-<T.Mesh position={[ -2.7, 1.1, -0.2 ]}>
+<T.Mesh position={[ 0.8, 0.7, 1.9 ]} receiveShadow castShadow>
   <T.BoxGeometry args={[1, 1, 1]} />
-  <T.MeshBasicMaterial color="red" />
+  <T.MeshBasicMaterial color="#80ff00" transparent={false} reflectivity={1} alphaHash={false} />
 </T.Mesh>
