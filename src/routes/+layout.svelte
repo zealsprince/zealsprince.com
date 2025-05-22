@@ -17,22 +17,6 @@
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family);
-  }
-
-  :global(a) {
-    color: var(--color-primary);
-    text-decoration: none;
-  }
-
-  :global(.tp-dfwv) {
-    position: fixed !important;
-    z-index: 100;
-  }
-
   .layout-root {
     font-size: var(--font-size-medium);
     font-family: var(--font-family);

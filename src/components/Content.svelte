@@ -153,6 +153,7 @@
     text-transform: uppercase;
     margin: 0;
     max-width: 920px;
+    filter: drop-shadow(16px 4px 0 var(--color-background));
   }
 
   .content-title-fixed {
@@ -178,7 +179,7 @@
 
   .content-body {
     border-top: 1px solid var(--color-secondary);
-    background: color-mix(in srgb, var(--color-background) 30%, transparent);
+    background: color-mix(in srgb, var(--color-background) 60%, transparent);
     backdrop-filter: blur(16px);
     z-index: 5;
     display: flex;
