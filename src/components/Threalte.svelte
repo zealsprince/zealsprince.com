@@ -2,14 +2,14 @@
   import { Canvas } from "@threlte/core";
   import { Studio } from "@threlte/studio";
   import { Theatre } from "@threlte/theatre";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import { writable } from "svelte/store";
-  import { onDestroy } from "svelte";
 
   // Accept a scene import path (relative to src)
   export let scenePath: string; // e.g. '@/scenes/SceneA.svelte'
   export let initialMode: "studio" | "theatre" | "viewer" = "viewer";
+  export let editorModeActive: boolean = false; // New prop to indicate if editor context is active
 
   const mode = writable(initialMode);
   let showDevBar = false;
@@ -34,7 +34,7 @@
     mode.set(newMode);
     if (browser && window.location.hostname === "localhost") {
       localStorage.setItem("threalte-mode", newMode);
-      // Only reload if switching away from 'viewer'
+      // Reload logic based on mode switching (can be kept or adjusted)
       if (currentMode !== "viewer" && newMode === "viewer") {
         window.location.reload();
       } else if (currentMode === "studio" && newMode === "theatre") {
@@ -42,7 +42,14 @@
       } else if (currentMode === "theatre" && newMode === "studio") {
         window.location.reload();
       }
-      // No reload if switching from viewer to studio/theatre
+    }
+  }
+
+  function exitEditorMode() {
+    if (browser) {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.delete("editor");
+      window.location.href = currentUrl.toString();
     }
   }
 
@@ -52,8 +59,10 @@
 
   onMount(() => {
     if (browser && window.location.hostname === "localhost") {
-      showDevBar = true;
-      // Restore mode from localStorage if present
+      // Dev bar is shown only if editorModeActive is true
+      showDevBar = editorModeActive;
+
+      // If not in active editor mode, restore mode from localStorage if present
       const saved = localStorage.getItem("threalte-mode");
       if (saved === "studio" || saved === "theatre" || saved === "viewer") {
         mode.set(saved);
@@ -92,10 +101,13 @@
       class:active={currentMode === "theatre"}>Theatre</button
     >
   </div>
+  <div class="threalte-exit-bar">
+    <button on:click={exitEditorMode}>Exit Editor</button>
+  </div>
 {/if}
 
 <div
-  class="threalte-fade-container"
+  class="threalte-container"
   class:visible={containerVisible}
   style="width:100vw; height:100vh; position:relative);"
 >
@@ -143,11 +155,47 @@
     z-index: 100;
   }
 
-  .threalte-fade-container {
+  .threalte-exit-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: rgba(30, 30, 30, 0.9);
+    color: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+  }
+
+  .threalte-exit-bar button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-weight: bold;
+    padding: 0.3rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition:
+      background 0.2s,
+      opacity 0.2s;
+  }
+
+  .threalte-exit-bar button:hover,
+  .threalte-exit-bar button:focus {
+    background: #fff;
+    color: #222;
+    opacity: 1;
+  }
+
+  .threalte-container {
     opacity: 0;
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--color-background);
   }
-  .threalte-fade-container.visible {
+  .threalte-container.visible {
     opacity: 1;
   }
 

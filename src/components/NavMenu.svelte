@@ -29,6 +29,7 @@
   on:focusin={() => (open = true)}
   on:focusout={() => (open = false)}
 >
+  <div class="nav-background"></div>
   <button
     class="nav-toggle {open ? 'open' : ''}"
     on:click={() => (open = !open)}
@@ -57,23 +58,40 @@
   {/if}
 </nav>
 
-<style>
+<style lang="scss">
+  @import "@/vars.scss";
+
   .nav-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(var(--color-background), 0.8);
+    background-color: color-mix(
+      in srgb,
+      var(--color-background) 60%,
+      transparent
+    );
     backdrop-filter: blur(16px);
     z-index: 20;
     pointer-events: auto;
     transition: opacity 0.3s;
   }
 
-  .nav-menu {
+  .nav-background {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 5.5rem;
+    background: color-mix(in srgb, var(--color-background) 60%, transparent);
     border-bottom: 1px solid var(--color-secondary);
+    backdrop-filter: blur(16px);
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .nav-menu {
     position: fixed;
     top: 0.5rem;
     left: 1.25rem;
@@ -84,6 +102,8 @@
   }
 
   .nav-toggle {
+    position: relative;
+    z-index: 20;
     width: var(--font-size-header);
     height: var(--font-size-header);
     background: none;
@@ -134,7 +154,7 @@
     min-width: 220px;
     max-height: 80vh;
     padding: 0;
-    margin-top: -1.2rem;
+    margin-top: 1rem;
     overflow-y: auto;
     position: relative;
     scrollbar-width: thin;
@@ -164,7 +184,7 @@
       color 0.2s,
       letter-spacing 0.2s;
     margin-left: 0.5rem;
-    line-height: 1.1;
+    line-height: var(--font-size-header);
     display: block;
   }
 
@@ -183,5 +203,16 @@
     bottom: 0;
     height: 50vh;
     border-radius: 0 0 1rem 1rem;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    .nav-list {
+      margin-top: 1rem;
+    }
+
+    .nav-link {
+      font-size: var(--font-size-subtitle);
+      line-height: var(--font-size-subtitle);
+    }
   }
 </style>

@@ -3,24 +3,59 @@
   import Threalte from "./Threalte.svelte";
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
+
   export let data: {
     html: string;
     gallery: string[];
     frontmatter: any;
     scene: string | null;
   };
-  let content = data.html;
-  let gallery = data.gallery;
+  export let editor: boolean = false; // New prop to control editor mode
+
+  // Variables for non-editor mode
+  let content: string;
+  let gallery: string[];
+  let styleClass: string;
+  let customStyle: string;
+  let minifyHeader: boolean = true;
+
+  // Scene is used in both modes
   let scene = data.scene;
-  let styleClass = data.frontmatter?.style
-    ? `content-${data.frontmatter.style}`
-    : "";
-  let customStyle = data.frontmatter?.style
-    ? `/styles/content/${data.frontmatter.style}.css`
-    : "";
-  let showHeader = false;
+
+  $: {
+    styleClass = data.frontmatter?.style
+      ? `content-${data.frontmatter.style}`
+      : "";
+
+    customStyle = data.frontmatter?.style
+      ? `/styles/content/${data.frontmatter.style}.css`
+      : "";
+
+    if (!editor) {
+      content = data.html;
+      gallery = data.gallery;
+    } else {
+      // Reset or set defaults for editor mode if necessary
+      content = "";
+      gallery = [];
+    }
+  }
+
+  function handleScroll() {
+    if (editor) return; // No scroll handling for header in editor mode
+    const scrollY = window.scrollY || window.pageYOffset;
+    const hideThreshold = window.innerHeight * 0.7;
+    minifyHeader = scrollY < hideThreshold;
+  }
+
   onMount(() => {
-    showHeader = true;
+    if (editor) return; // No scroll listener setup in editor mode
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial check
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   });
 </script>
 
@@ -28,32 +63,54 @@
   <link rel="stylesheet" href={customStyle} />
 {/if}
 
-<div class="content-root {styleClass}">
-  <div class="content-scene">
-    <Threalte scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`} />
+{#if editor}
+  <!-- Editor Mode: Only Threalte, configured for editing -->
+  <div class="content-root content-editor-mode">
+    <Threalte
+      scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`}
+      editorModeActive={true}
+    />
   </div>
-  {#if showHeader}
-    <div class="content-header" in:fly={{ y: 60, duration: 700, opacity: 0 }}>
-      <h1 class="content-title">{data.frontmatter?.title}</h1>
-      {#if data.frontmatter?.subtitle}
-        <h2 class="content-subtitle">{data.frontmatter.subtitle}</h2>
-      {/if}
+{:else}
+  <!-- Default Content Display -->
+  <div class="content-root {styleClass}">
+    <div class="content-scene">
+      <Threalte scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`} />
     </div>
-  {/if}
-  <div style="position: relative; height: 100vh;"></div>
-  <!-- Spacer for visualization and title overlay -->
-  <div class="content-body">
-    <div class="content-markdown">
-      {@html content}
-    </div>
-    <div class="content-gallery">
-      <Gallery images={gallery} />
+    {#if minifyHeader}
+      <div
+        class="content-header"
+        in:fly={{ y: 60, duration: 700, opacity: 0 }}
+        out:fly={{ y: -60, duration: 700, opacity: 0 }}
+      >
+        <h1 class="content-title">{data.frontmatter?.title}</h1>
+        {#if data.frontmatter?.subtitle}
+          <h2 class="content-subtitle">{data.frontmatter.subtitle}</h2>
+        {/if}
+      </div>
+    {:else}
+      <h1
+        class="content-title-fixed"
+        transition:fly={{ y: 20, duration: 200, opacity: 0 }}
+      >
+        {data.frontmatter?.title}
+      </h1>
+    {/if}
+    <div style="position: relative; height: 100vh;"></div>
+    <!-- Spacer for visualization and title overlay -->
+    <div class="content-body">
+      <div class="content-markdown">
+        {@html content}
+      </div>
+      <div class="content-gallery">
+        <Gallery images={gallery} />
+      </div>
     </div>
   </div>
-</div>
+{/if}
 
 <style lang="scss">
-  @import "@/app.scss";
+  @import "@/vars.scss";
 
   /* Base content styles */
   .content-root {
@@ -88,6 +145,22 @@
     line-height: 1.2;
     text-transform: uppercase;
     margin: 0;
+    max-width: 920px;
+  }
+
+  .content-title-fixed {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    color: var(--color-primary);
+    text-align: left;
+    max-width: 80vw;
+    font-size: var(--font-size-subtitle);
+    font-weight: 100;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin: 0;
+    z-index: 100;
   }
 
   .content-subtitle {
@@ -98,6 +171,7 @@
 
   .content-body {
     border-top: 1px solid var(--color-secondary);
+    background: color-mix(in srgb, var(--color-background) 30%, transparent);
     backdrop-filter: blur(16px);
     z-index: 5;
     display: flex;
@@ -125,6 +199,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  /* Styles for editor mode to ensure Threalte can take full space if needed */
+  .content-editor-mode {
+    width: 100vw;
+    height: 100vh;
+    display: flex; /* Ensure Threalte can expand */
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .content-editor-mode > :global(div) {
+    /* Target Threalte's wrapper */
+    flex-grow: 1;
   }
 
   @media (max-width: $breakpoint-xl) {
