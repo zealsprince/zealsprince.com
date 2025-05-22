@@ -6,7 +6,7 @@ export default {
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
   // for more information about preprocessors
   preprocess: vitePreprocess(),
-  kit: { // Add this section
+  kit: {
     adapter: adapter({
       pages: 'build',
       assets: 'build',

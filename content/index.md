@@ -2,12 +2,18 @@
 navigation: About
 title: Andrew Lake
 date: 2025-05-18
-# gallery:
-  # - /images/project1.jpg
-  # - /images/project2.jpg
 scene: SceneIndex
 style: index
 order: 1
+links:
+  - title: GitHub
+    icon: github
+    url: https://github.com/zealsprince
+  - title: LinkedIn
+    icon: linkedin
+    url: https://www.linkedin.com/in/zealsprince/
+# gallery:
+#   - /images/mod1.jpg
 ---
 
 ## About Me

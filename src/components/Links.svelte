@@ -1,0 +1,129 @@
+<script lang="ts">
+  import {
+    Box,
+    FileText,
+    Github,
+    Globe,
+    Instagram,
+    Linkedin,
+    Mail,
+    Rss,
+    Twitter,
+  } from "@lucide/svelte";
+
+  import { SiSteam } from "@icons-pack/svelte-simple-icons";
+
+  import type { Component } from "svelte";
+  import type { RawLink } from "@/types/Content";
+
+  export let links: RawLink[] = [];
+
+  interface ProcessedLink {
+    href: string;
+    label: string;
+    iconComponent: Component | null;
+  }
+
+  // Map icon names to actual Svelte components
+  const iconMap: Record<string, Component> = {
+    default: Globe,
+    box: Box,
+    github: Github,
+    linkedin: Linkedin,
+    steam: SiSteam,
+    twitter: Twitter,
+    x: Twitter,
+    instagram: Instagram,
+    cv: FileText,
+    blog: Rss,
+    email: Mail,
+  };
+
+  let processedLinks: ProcessedLink[] = [];
+
+  $: {
+    if (links) {
+      processedLinks = links
+        .map((link) => {
+          let iconComponent =
+            iconMap[link.icon ? link.icon.toLowerCase() : "default"];
+
+          if (!iconComponent) {
+            iconComponent = iconMap.default; // Fallback to default icon if not found
+          }
+
+          return {
+            href: link.url,
+            label: link.title,
+            iconComponent: iconComponent || null, // Fallback to null if not found
+          };
+        })
+        .filter((link) => link.iconComponent !== null);
+
+      // Add custom editor link in development mode
+      if (import.meta.env.DEV && typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('editor', 'true');
+        processedLinks.push({
+          href: url.toString(),
+          label: 'Editor',
+          iconComponent: Box,
+        });
+      }
+    } else {
+      processedLinks = [];
+    }
+  }
+</script>
+
+{#if processedLinks.length > 0}
+  <div class="social-links">
+    {#each processedLinks as link}
+      <a
+        alt={link.label}
+        href={link.href}
+        target="_blank"
+        rel="noopener"
+        aria-label={link.label}
+      >
+        {#if link.iconComponent}
+          <svelte:component this={link.iconComponent} size={16} title={link.label} />
+        {/if}
+      </a>
+    {/each}
+  </div>
+{/if}
+
+<style lang="scss">
+  .social-links {
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.2rem;
+    z-index: 200;
+    background: none;
+    pointer-events: auto;
+  }
+  .social-links a {
+    color: var(--color-primary);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  .social-links a:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .social-links {
+      bottom: 2.25rem;
+      right: 2.25rem;
+      flex-direction: column;
+    }
+  }
+</style>

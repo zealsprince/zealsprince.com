@@ -144,7 +144,8 @@
   .threalte-dev-bar {
     position: fixed;
     bottom: 1.5rem;
-    right: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
     background: rgba(30, 30, 30, 0.9);
     color: #fff;
     border-radius: 1.5rem;

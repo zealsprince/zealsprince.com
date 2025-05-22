@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { fly, fade } from "svelte/transition";
+  import { onMount, onDestroy } from "svelte";
   export let items: Array<{
     slug: string;
     title: string;
@@ -9,6 +10,23 @@
     style?: string;
   }> = [];
   let open = false;
+  let isPointer = false;
+  let pointerListener: ((e: MediaQueryListEvent) => void) | null = null;
+
+  onMount(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    isPointer = mq.matches;
+    pointerListener = (e) => { isPointer = e.matches; };
+    mq.addEventListener('change', pointerListener);
+  });
+
+  onDestroy(() => {
+    if (pointerListener) {
+      const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+      mq.removeEventListener('change', pointerListener);
+    }
+  });
+
   function navTo(slug: string) {
     goto(slug === "index" ? "/" : `/${slug}`);
     open = false;
@@ -24,10 +42,10 @@
 <nav
   class="nav-menu"
   aria-label="Main navigation"
-  on:mouseenter={() => (open = true)}
-  on:mouseleave={() => (open = false)}
-  on:focusin={() => (open = true)}
-  on:focusout={() => (open = false)}
+  on:mouseenter={() => { if (isPointer) open = true; }}
+  on:mouseleave={() => { if (isPointer) open = false; }}
+  on:focusin={() => { if (isPointer) open = true; }}
+  on:focusout={() => { if (isPointer) open = false; }}
 >
   <div class="nav-background"></div>
   <button
@@ -59,7 +77,7 @@
 </nav>
 
 <style lang="scss">
-  @import "@/vars.scss";
+  @use "@/vars.scss" as vars;
 
   .nav-overlay {
     position: fixed;
@@ -205,7 +223,7 @@
     border-radius: 0 0 1rem 1rem;
   }
 
-  @media (max-width: $breakpoint-md) {
+  @media (max-width: vars.$breakpoint-md) {
     .nav-list {
       margin-top: 1rem;
     }

@@ -3,21 +3,24 @@
   import Threalte from "./Threalte.svelte";
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
+  import Links from "./Links.svelte";
+  import type { RawLink, GalleryItem } from "@/types/Content";
 
   export let data: {
     html: string;
-    gallery: string[];
+    gallery: GalleryItem[];
     frontmatter: any;
     scene: string | null;
+    links: RawLink[];
   };
   export let editor: boolean = false; // New prop to control editor mode
 
   // Variables for non-editor mode
-  let content: string;
-  let gallery: string[];
-  let styleClass: string;
-  let customStyle: string;
-  let minifyHeader: boolean = true;
+  let content = "";
+  let gallery: GalleryItem[] = [];
+  let styleClass = "";
+  let customStyle = "";
+  let minifyHeader: boolean = false;
 
   // Scene is used in both modes
   let scene = data.scene;
@@ -32,8 +35,8 @@
       : "";
 
     if (!editor) {
-      content = data.html;
-      gallery = data.gallery;
+      content = data.html || "";
+      gallery = data.gallery || [];
     } else {
       // Reset or set defaults for editor mode if necessary
       content = "";
@@ -45,7 +48,7 @@
     if (editor) return; // No scroll handling for header in editor mode
     const scrollY = window.scrollY || window.pageYOffset;
     const hideThreshold = window.innerHeight * 0.7;
-    minifyHeader = scrollY < hideThreshold;
+    minifyHeader = scrollY > hideThreshold;
   }
 
   onMount(() => {
@@ -77,7 +80,7 @@
     <div class="content-scene">
       <Threalte scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`} />
     </div>
-    {#if minifyHeader}
+    {#if !minifyHeader}
       <div
         class="content-header"
         in:fly={{ y: 60, duration: 700, opacity: 0 }}
@@ -106,11 +109,15 @@
         <Gallery images={gallery} />
       </div>
     </div>
+    <!-- Social Links: bottom right -->
+    {#if !minifyHeader && !editor}
+      <Links links={data.links} />
+    {/if}
   </div>
 {/if}
 
 <style lang="scss">
-  @import "@/vars.scss";
+  @use "@/vars.scss" as vars;
 
   /* Base content styles */
   .content-root {
@@ -195,7 +202,6 @@
   .content-gallery {
     flex: 1 1 0;
     min-width: 250px;
-    padding: 2rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -214,7 +220,7 @@
     flex-grow: 1;
   }
 
-  @media (max-width: $breakpoint-xl) {
+  @media (max-width: vars.$breakpoint-xl) {
     .content-header {
       max-width: 60vw;
     }
@@ -230,9 +236,13 @@
     }
   }
 
-  @media (max-width: $breakpoint-lg) {
-    .content-header {
-      max-width: none;
+  @media (max-width: vars.$breakpoint-lg) {
+    .content-title {
+      font-size: var(--font-size-header);
+    }
+
+    .content-subtitle {
+      font-size: var(--font-size-text);
     }
 
     .content-body {
@@ -246,15 +256,7 @@
     }
   }
 
-  @media (max-width: $breakpoint-md) {
-    .content-title {
-      font-size: var(--font-size-header);
-    }
-
-    .content-subtitle {
-      font-size: var(--font-size-text);
-    }
-
+  @media (max-width: vars.$breakpoint-md) {
     .content-body {
       flex-direction: column;
       align-items: stretch;
@@ -262,7 +264,7 @@
     }
   }
 
-  @media (max-width: $breakpoint-sm) {
+  @media (max-width: vars.$breakpoint-sm) {
     .content-title {
       font-size: var(--font-size-subtitle);
     }
