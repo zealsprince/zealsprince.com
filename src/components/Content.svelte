@@ -164,7 +164,7 @@
     max-width: 80vw;
     font-size: var(--font-size-md);
     font-weight: 100;
-    line-height: 1.2;
+    line-height: var(--font-size-subtitle);
     text-transform: uppercase;
     margin: 0;
     z-index: 100;
