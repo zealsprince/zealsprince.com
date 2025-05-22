@@ -1,5 +1,9 @@
 <script lang="ts">
   import { T } from "@threlte/core";
+  import type { SceneProps } from ".";
+
+  // svelte-ignore export_let_unused
+  export let props: SceneProps;
 </script>
 
 <T.PerspectiveCamera

@@ -7,9 +7,11 @@
   import { writable } from "svelte/store";
 
   import Spinner from "./Spinner.svelte";
+  import { sceneMap } from "../scenes/index";
+  import type { SceneName } from "$/types/Scene";
 
   // Accept a scene import path (relative to src)
-  export let scenePath: string; // e.g. '$scenes/SceneA.svelte'
+  export let scene: SceneName = "SceneIndex" as SceneName; // scene name, not path
   export let initialMode: "studio" | "theatre" | "viewer" = "viewer";
   export let editorModeActive: boolean = false; // New prop to indicate if editor context is active
 
@@ -17,21 +19,14 @@
   let showDevBar = false;
   let containerVisible = false;
 
-  let Scene: any = null;
+  let Scene: (typeof sceneMap)[typeof scene] | null = null;
   let loading = false;
   let scrollY = 0;
 
   async function loadScene() {
     loading = true;
-    // Map SvelteKit/Vite aliases to relative paths for dynamic import
-    let importPath = scenePath;
-    if (importPath.startsWith("$scenes/")) {
-      importPath = "../scenes/" + importPath.replace("$scenes/", "");
-    } else if (importPath.startsWith("@/")) {
-      importPath = "../" + importPath.replace("@/", "");
-    }
-    const mod = await import(/* @vite-ignore */ importPath);
-    Scene = mod.default;
+    // Use static mapping instead of dynamic import
+    Scene = sceneMap[scene] || sceneMap["SceneIndex"];
     loading = false;
   }
 
@@ -129,22 +124,28 @@
       <Spinner size={32} />
     </div>
   {:else if Scene}
-    {#key currentMode + "-" + scenePath}
+    {#key currentMode + "-" + scene}
       {#if currentMode === "studio"}
         <Canvas>
           <Studio>
-            <svelte:component this={Scene} editor />
+            <svelte:component
+              this={Scene}
+              props={{ editor: editorModeActive, scrollY }}
+            />
           </Studio>
         </Canvas>
       {:else if currentMode === "theatre"}
         <Canvas>
           <Theatre>
-            <svelte:component this={Scene} editor />
+            <svelte:component
+              this={Scene}
+              props={{ editor: editorModeActive, scrollY }}
+            />
           </Theatre>
         </Canvas>
       {:else}
         <Canvas>
-          <svelte:component this={Scene} cameraY={scrollY} />
+          <svelte:component this={Scene} props={{ scrollY }} />
         </Canvas>
       {/if}
     {/key}

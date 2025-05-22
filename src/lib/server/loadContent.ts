@@ -39,6 +39,7 @@ export async function loadContent(slug: string): Promise<ContentData> {
       }
     });
   }
+
   const scene = frontmatter.scene ?? null;
   const links = frontmatter.links ?? [];
   return { html, gallery, frontmatter, scene, links };

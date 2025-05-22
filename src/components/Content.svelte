@@ -6,6 +6,7 @@
   import Links from "./Links.svelte";
   import type { RawLink, GalleryItem } from "$types/Content";
   import { base } from "$app/paths";
+  import { SceneName } from "$/types/Scene";
 
   export let data: {
     html: string;
@@ -24,7 +25,7 @@
   let minifyHeader: boolean = false;
 
   // Scene is used in both modes
-  let scene = data.scene;
+  let scene: SceneName = (data.scene as SceneName) ?? SceneName.SceneIndex;
 
   $: {
     styleClass = data.frontmatter?.style
@@ -70,16 +71,13 @@
 {#if editor}
   <!-- Editor Mode: Only Threalte, configured for editing -->
   <div class="content-root content-editor-mode">
-    <Threalte
-      scenePath={`$scenes/${scene ?? "SceneIndex"}.svelte`}
-      editorModeActive={true}
-    />
+    <Threalte {scene} editorModeActive={true} />
   </div>
 {:else}
   <!-- Default Content Display -->
   <div class="content-root {styleClass}">
     <div class="content-scene">
-      <Threalte scenePath={`$scenes/${scene ?? "SceneIndex"}.svelte`} />
+      <Threalte {scene} />
     </div>
     {#if !minifyHeader}
       <div

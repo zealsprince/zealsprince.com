@@ -2,9 +2,9 @@
   import { T } from "@threlte/core";
   import { useThrelte } from "@threlte/core";
   import { onMount, onDestroy } from "svelte";
+  import type { SceneProps } from ".";
 
-  export let cameraY: number = 0;
-  export let editor: boolean = false;
+  export let props: SceneProps;
 
   let mouseX: number = 0;
   let mouseY: number = 0;
@@ -12,7 +12,7 @@
   const { invalidate, size } = useThrelte();
 
   function handleMouseMove(event: MouseEvent) {
-    if (editor) return;
+    if (props.editor) return;
     mouseX = event.clientX;
     mouseY = event.clientY;
     invalidate();
@@ -54,16 +54,18 @@
     }
   });
 
-  $: if (cameraY && !editor) {
+  $: if (props.scrollY && !props.editor) {
     invalidate();
   }
 
-  $: cameraX = editor ? 0 : mouseX / $size.width - 0.5;
+  $: cameraX = props.editor ? 0 : mouseX / $size.width - 0.5;
 
-  $: cameraMouseOffsetY = editor ? 0 : mouseY / $size.height - 0.5;
+  $: cameraMouseOffsetY = props.editor ? 0 : mouseY / $size.height - 0.5;
 
   // When in editor mode, Y is fixed. Otherwise, it combines scroll and mouse.
-  $: finalCameraY = editor ? 1 : 1 + cameraY / 500 + cameraMouseOffsetY;
+  $: finalCameraY = props.editor
+    ? 1
+    : 1 + props.scrollY / 500 + cameraMouseOffsetY;
 
   // Generate random cubes on mount
   type Cube = {
@@ -89,7 +91,7 @@
 />
 
 <T.Scene position={[0, 0, 0]}>
-  <T.AmbientLight color="white" intensity={0.4} />
+  <T.AmbientLight color="white" intensity={0.42} position={[ 0, 0, 0 ]} />
 
   {#each cubes as cube, i}
     <T.Mesh
