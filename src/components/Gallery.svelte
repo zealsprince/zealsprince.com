@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { GalleryItem } from "@/types/Content";
+  import type { GalleryItem } from "$types/Content";
   export let images: GalleryItem[] = [];
 </script>
 

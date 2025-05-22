@@ -13,19 +13,19 @@
 
   import { SiSteam } from "@icons-pack/svelte-simple-icons";
 
+  import type { RawLink } from "$types/Content";
   import type { Component } from "svelte";
-  import type { RawLink } from "@/types/Content";
 
   export let links: RawLink[] = [];
 
   interface ProcessedLink {
     href: string;
     label: string;
-    iconComponent: Component | null;
+    iconComponent: any | null;
   }
 
   // Map icon names to actual Svelte components
-  const iconMap: Record<string, Component> = {
+  const iconMap: Record<string, Component | any> = {
     default: Globe,
     box: Box,
     github: Github,
@@ -61,12 +61,12 @@
         .filter((link) => link.iconComponent !== null);
 
       // Add custom editor link in development mode
-      if (import.meta.env.DEV && typeof window !== 'undefined') {
+      if (import.meta.env.DEV && typeof window !== "undefined") {
         const url = new URL(window.location.href);
-        url.searchParams.set('editor', 'true');
+        url.searchParams.set("editor", "true");
         processedLinks.push({
           href: url.toString(),
-          label: 'Editor',
+          label: "Editor",
           iconComponent: Box,
         });
       }
@@ -80,14 +80,17 @@
   <div class="social-links">
     {#each processedLinks as link}
       <a
-        alt={link.label}
         href={link.href}
         target="_blank"
         rel="noopener"
         aria-label={link.label}
       >
         {#if link.iconComponent}
-          <svelte:component this={link.iconComponent} size={16} title={link.label} />
+          <svelte:component
+            this={link.iconComponent}
+            size={16}
+            title={link.label}
+          />
         {/if}
       </a>
     {/each}

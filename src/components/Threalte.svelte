@@ -6,8 +6,10 @@
   import { browser } from "$app/environment";
   import { writable } from "svelte/store";
 
+  import Spinner from "./Spinner.svelte";
+
   // Accept a scene import path (relative to src)
-  export let scenePath: string; // e.g. '@/scenes/SceneA.svelte'
+  export let scenePath: string; // e.g. '$scenes/SceneA.svelte'
   export let initialMode: "studio" | "theatre" | "viewer" = "viewer";
   export let editorModeActive: boolean = false; // New prop to indicate if editor context is active
 
@@ -21,10 +23,14 @@
 
   async function loadScene() {
     loading = true;
-    // Vite alias @/ resolves to /src
-    const mod = await import(
-      /* @vite-ignore */ scenePath.replace("@/", "/src/")
-    );
+    // Map SvelteKit/Vite aliases to relative paths for dynamic import
+    let importPath = scenePath;
+    if (importPath.startsWith("$scenes/")) {
+      importPath = "../scenes/" + importPath.replace("$scenes/", "");
+    } else if (importPath.startsWith("@/")) {
+      importPath = "../" + importPath.replace("@/", "");
+    }
+    const mod = await import(/* @vite-ignore */ importPath);
     Scene = mod.default;
     loading = false;
   }
@@ -47,6 +53,9 @@
 
   function exitEditorMode() {
     if (browser) {
+      // Reset the mode to viewer
+      localStorage.setItem("threalte-mode", "viewer");
+
       const currentUrl = new URL(window.location.href);
       currentUrl.searchParams.delete("editor");
       window.location.href = currentUrl.toString();
@@ -62,10 +71,12 @@
       // Dev bar is shown only if editorModeActive is true
       showDevBar = editorModeActive;
 
-      // If not in active editor mode, restore mode from localStorage if present
-      const saved = localStorage.getItem("threalte-mode");
-      if (saved === "studio" || saved === "theatre" || saved === "viewer") {
-        mode.set(saved);
+      if (editorModeActive) {
+        // If not in active editor mode, restore mode from localStorage if present
+        const saved = localStorage.getItem("threalte-mode");
+        if (saved === "studio" || saved === "theatre" || saved === "viewer") {
+          mode.set(saved);
+        }
       }
     }
     loadScene();
@@ -115,7 +126,7 @@
     <div
       style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;"
     >
-      Loading scene...
+      <Spinner size={32} />
     </div>
   {:else if Scene}
     {#key currentMode + "-" + scenePath}

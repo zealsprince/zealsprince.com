@@ -3,7 +3,7 @@ import path from 'node:path';
 import { error } from '@sveltejs/kit';
 import matter from 'gray-matter';
 import { marked } from 'marked';
-import type { ContentData, Frontmatter, GalleryItem } from '@/types/Content'; // Added GalleryItem type
+import type { ContentData, Frontmatter, GalleryItem } from '$types/Content'; // Added GalleryItem type
 
 export async function loadContent(slug: string): Promise<ContentData> {
   const mdPath = path.resolve('content', `${slug}.md`);

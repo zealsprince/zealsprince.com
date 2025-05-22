@@ -9,23 +9,8 @@
       "ESNext",
       "DOM"
     ],
-    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@/components/*": [
-        "src/components/*"
-      ],
-      "@/scenes/*": [
-        "src/scenes/*"
-      ],
-      "$lib/*": [
-        "src/lib/*"
-      ]
-    },
     "resolveJsonModule": true,
     "types": [
       "vite/client"

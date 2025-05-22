@@ -4,7 +4,7 @@
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
   import Links from "./Links.svelte";
-  import type { RawLink, GalleryItem } from "@/types/Content";
+  import type { RawLink, GalleryItem } from "$types/Content";
 
   export let data: {
     html: string;
@@ -47,7 +47,7 @@
   function handleScroll() {
     if (editor) return; // No scroll handling for header in editor mode
     const scrollY = window.scrollY || window.pageYOffset;
-    const hideThreshold = window.innerHeight * 0.7;
+    const hideThreshold = window.innerHeight * 0.8;
     minifyHeader = scrollY > hideThreshold;
   }
 
@@ -70,7 +70,7 @@
   <!-- Editor Mode: Only Threalte, configured for editing -->
   <div class="content-root content-editor-mode">
     <Threalte
-      scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`}
+      scenePath={`$scenes/${scene ?? "SceneIndex"}.svelte`}
       editorModeActive={true}
     />
   </div>
@@ -78,13 +78,13 @@
   <!-- Default Content Display -->
   <div class="content-root {styleClass}">
     <div class="content-scene">
-      <Threalte scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`} />
+      <Threalte scenePath={`$scenes/${scene ?? "SceneIndex"}.svelte`} />
     </div>
     {#if !minifyHeader}
       <div
         class="content-header"
-        in:fly={{ y: 60, duration: 700, opacity: 0 }}
-        out:fly={{ y: -60, duration: 700, opacity: 0 }}
+        in:fly={{ y: -60, duration: 700, opacity: 0 }}
+        out:fly={{ y: -60, duration: 200, opacity: 0 }}
       >
         <h1 class="content-title">{data.frontmatter?.title}</h1>
         {#if data.frontmatter?.subtitle}

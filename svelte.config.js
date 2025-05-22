@@ -14,6 +14,13 @@ export default {
       precompress: true,
       strict: true,
     }),
+    alias: {
+      "$/*": "src/*",
+      "$components/*": "src/components/*",
+      "$scenes/*": "src/scenes/*",
+      "$types/*": "src/types/*"
+    },
+
     paths: {
       base: process.env.NODE_ENV === 'production' ? '/zealsprince.com' : '',
     },
