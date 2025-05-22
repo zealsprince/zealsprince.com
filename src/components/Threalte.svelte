@@ -23,6 +23,10 @@
   let loading = false;
   let scrollY = 0;
 
+  // Add mouseX and mouseY state and event handling
+  let mouseX: number = 0;
+  let mouseY: number = 0;
+
   async function loadScene() {
     loading = true;
     // Use static mapping instead of dynamic import
@@ -61,6 +65,11 @@
     scrollY = window.scrollY || window.pageYOffset;
   }
 
+  function handleMouseMove(event: MouseEvent) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+  }
+
   onMount(() => {
     if (browser && window.location.hostname === "localhost") {
       // Dev bar is shown only if editorModeActive is true
@@ -80,20 +89,25 @@
     }, 10); // allow DOM to render, then fade in
     if (browser) {
       window.addEventListener("scroll", handleScroll);
+      window.addEventListener("mousemove", handleMouseMove);
     }
   });
 
   onDestroy(() => {
     if (browser) {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
     }
   });
 
   $: currentMode = $mode;
+  // Pass mouseX and mouseY to all scenes
+  $: sceneProps = { editor: editorModeActive, scrollY, mouseX, mouseY };
 </script>
 
 {#if showDevBar}
   <div class="threalte-dev-bar">
+    <button on:click={exitEditorMode}>Exit Editor</button>
     <button
       on:click={() => switchMode("viewer")}
       class:active={currentMode === "viewer"}>Viewer</button
@@ -106,9 +120,6 @@
       on:click={() => switchMode("theatre")}
       class:active={currentMode === "theatre"}>Theatre</button
     >
-  </div>
-  <div class="threalte-exit-bar">
-    <button on:click={exitEditorMode}>Exit Editor</button>
   </div>
 {/if}
 
@@ -128,24 +139,18 @@
       {#if currentMode === "studio"}
         <Canvas>
           <Studio>
-            <svelte:component
-              this={Scene}
-              props={{ editor: editorModeActive, scrollY }}
-            />
+            <svelte:component this={Scene} props={sceneProps} />
           </Studio>
         </Canvas>
       {:else if currentMode === "theatre"}
         <Canvas>
           <Theatre>
-            <svelte:component
-              this={Scene}
-              props={{ editor: editorModeActive, scrollY }}
-            />
+            <svelte:component this={Scene} props={sceneProps} />
           </Theatre>
         </Canvas>
       {:else}
         <Canvas>
-          <svelte:component this={Scene} props={{ scrollY }} />
+          <svelte:component this={Scene} props={sceneProps} />
         </Canvas>
       {/if}
     {/key}
@@ -166,41 +171,6 @@
     display: flex;
     gap: 0.5rem;
     z-index: 100;
-  }
-
-  .threalte-exit-bar {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    background: rgba(30, 30, 30, 0.9);
-    color: #fff;
-    border-radius: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 0.5rem;
-    display: flex;
-    gap: 0.5rem;
-    z-index: 100;
-  }
-
-  .threalte-exit-bar button {
-    background: none;
-    border: none;
-    color: inherit;
-    font-weight: bold;
-    padding: 0.3rem 1rem;
-    border-radius: 1rem;
-    cursor: pointer;
-    opacity: 0.7;
-    transition:
-      background 0.2s,
-      opacity 0.2s;
-  }
-
-  .threalte-exit-bar button:hover,
-  .threalte-exit-bar button:focus {
-    background: #fff;
-    color: #222;
-    opacity: 1;
   }
 
   .threalte-container {

@@ -1,16 +1,6 @@
-/* Example custom style for 'zealsprince' content */
-.content-zealsprince {
-    --color-primary: #00b4d8;
-    --bg: #03045e;
-    --fg: #caf0f8;
-}
-
-.content-zealsprince .content-markdown {
-    background: rgba(3, 4, 94, 0.92);
-    color: var(--fg);
-}
-
-.content-zealsprince .content-title {
-    color: var(--color-primary);
-    text-shadow: 0 2px 8px #0008;
+:root {
+  --color-primary: #212429;
+  --color-secondary: #997b4a;
+  --color-background: #e7a539;
+  --color-text: #212429;
 }

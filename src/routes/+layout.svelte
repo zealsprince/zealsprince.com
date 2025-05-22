@@ -10,7 +10,7 @@
 
 <div class="layout-root">
   {#key page.url.pathname}
-    <div transition:fade={{ duration: 100 }}>
+    <div transition:fade={{ duration: 200 }}>
       {@render children()}
     </div>
   {/key}
@@ -23,6 +23,10 @@
 
     background: var(--color-background);
     color: var(--color-text);
+
+    transition:
+      background 0.2s ease-in-out,
+      color 0.2s ease-in-out;
 
     z-index: -10;
   }

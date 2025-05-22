@@ -6,4 +6,6 @@ export enum SceneName {
 export type SceneProps = {
   scrollY: number;
   editor?: boolean;
+  mouseX: number;
+  mouseY: number;
 };

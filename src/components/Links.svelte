@@ -108,6 +108,7 @@
     z-index: 200;
     background: none;
     pointer-events: auto;
+    filter: drop-shadow(4px 0px 0 var(--color-background));
   }
   .social-links a {
     color: var(--color-primary);
