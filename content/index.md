@@ -1,6 +1,7 @@
 ---
-navigation: About
+navigation: Andrew Lake
 title: Andrew Lake
+subtitle: Software Lead / Engineer / Architect
 date: 2025-05-18
 scene: SceneIndex
 style: index

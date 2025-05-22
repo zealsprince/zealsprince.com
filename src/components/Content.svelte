@@ -146,12 +146,12 @@
   }
 
   .content-title {
-    font-size: var(--font-size-title);
+    font-size: var(--font-size-xl);
     font-weight: 100;
     line-height: 1.2;
     text-transform: uppercase;
     margin: 0;
-    max-width: 920px;
+    max-width: var(--content-text-max-width);
     filter: drop-shadow(16px 4px 0 var(--color-background));
   }
 
@@ -162,7 +162,7 @@
     color: var(--color-primary);
     text-align: left;
     max-width: 80vw;
-    font-size: var(--font-size-subtitle);
+    font-size: var(--font-size-md);
     font-weight: 100;
     line-height: 1.2;
     text-transform: uppercase;
@@ -171,8 +171,8 @@
   }
 
   .content-subtitle {
-    font-size: var(--font-size-subtitle);
-    margin: 0.2rem 0 2rem 0;
+    font-size: var(--font-size-md);
+    margin: 0.2rem 0 0 0;
     font-weight: 400;
   }
 
@@ -192,7 +192,7 @@
 
   .content-markdown {
     flex: 2 1 0;
-    max-width: 50vw;
+    max-width: var(--content-text-max-width);
     text-align: justify;
     color: var(--color-text);
     border-radius: 1rem;
@@ -238,11 +238,11 @@
 
   @media (max-width: vars.$breakpoint-lg) {
     .content-title {
-      font-size: var(--font-size-header);
+      font-size: var(--font-size-lg);
     }
 
     .content-subtitle {
-      font-size: var(--font-size-text);
+      font-size: var(--font-size-sm);
     }
 
     .content-body {
@@ -266,11 +266,11 @@
 
   @media (max-width: vars.$breakpoint-sm) {
     .content-title {
-      font-size: var(--font-size-subtitle);
+      font-size: var(--font-size-md);
     }
 
     .content-subtitle {
-      font-size: var(--font-size-text);
+      font-size: var(--font-size-xs);
     }
   }
 </style>

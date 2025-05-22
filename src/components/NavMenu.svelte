@@ -14,16 +14,18 @@
   let pointerListener: ((e: MediaQueryListEvent) => void) | null = null;
 
   onMount(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
     isPointer = mq.matches;
-    pointerListener = (e) => { isPointer = e.matches; };
-    mq.addEventListener('change', pointerListener);
+    pointerListener = (e) => {
+      isPointer = e.matches;
+    };
+    mq.addEventListener("change", pointerListener);
   });
 
   onDestroy(() => {
     if (pointerListener) {
-      const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
-      mq.removeEventListener('change', pointerListener);
+      const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+      mq.removeEventListener("change", pointerListener);
     }
   });
 
@@ -42,10 +44,18 @@
 <nav
   class="nav-menu"
   aria-label="Main navigation"
-  on:mouseenter={() => { if (isPointer) open = true; }}
-  on:mouseleave={() => { if (isPointer) open = false; }}
-  on:focusin={() => { if (isPointer) open = true; }}
-  on:focusout={() => { if (isPointer) open = false; }}
+  on:mouseenter={() => {
+    if (isPointer) open = true;
+  }}
+  on:mouseleave={() => {
+    if (isPointer) open = false;
+  }}
+  on:focusin={() => {
+    if (isPointer) open = true;
+  }}
+  on:focusout={() => {
+    if (isPointer) open = false;
+  }}
 >
   <div class="nav-background"></div>
   <button
@@ -114,7 +124,7 @@
     top: 0.5rem;
     left: 1.25rem;
     z-index: 25;
-    font-size: var(--font-size-header);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-light);
     text-transform: uppercase;
   }
@@ -122,12 +132,12 @@
   .nav-toggle {
     position: relative;
     z-index: 20;
-    width: var(--font-size-header);
-    height: var(--font-size-header);
+    width: var(--font-size-lg);
+    height: var(--font-size-lg);
     background: none;
     color: var(--color-primary);
     border: none;
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-sm);
     padding: 0rem; /* Adjusted padding for SVG */
     cursor: pointer;
     box-shadow: none;
@@ -202,7 +212,7 @@
       color 0.2s,
       letter-spacing 0.2s;
     margin-left: 0.5rem;
-    line-height: var(--font-size-header);
+    line-height: var(--font-size-lg);
     display: block;
   }
 
@@ -229,8 +239,8 @@
     }
 
     .nav-link {
-      font-size: var(--font-size-subtitle);
-      line-height: var(--font-size-subtitle);
+      font-size: var(--font-size-md);
+      line-height: var(--font-size-md);
     }
   }
 </style>
