@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap");
+
+/* Global variables */
+$breakpoint-xl: 1200px;
+$breakpoint-lg: 900px;
+$breakpoint-md: 600px;
+$breakpoint-sm: 400px;
+
+:root {
+  --color-background: #fff;
+  --color-text: #111;
+  --color-primary: #333;
+  --color-secondary: #257;
+  --font-family: "Commissioner", sans-serif;
+  --font-size-title: 8rem;
+  --font-size-subtitle: 2rem;
+  --font-size-header: 4rem;
+  --font-size-text: 0.5rem;
+  --font-weight-light: 100;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  --border-radius-small: 0.5rem;
+  --border-radius-medium: 1rem;
+  --border-radius-large: 1.5rem;
+  --border-radius-full: 50%;
+}

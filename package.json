@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "svelte": "npx sv"
   },
   "dependencies": {
     "@threlte/core": "^8.0.4",
@@ -14,8 +15,7 @@
     "@threlte/studio": "^0.1.7",
     "@threlte/theatre": "^3.0.3",
     "gray-matter": "^4.0.3",
-    "marked": "^15.0.11",
-    "p5": "^2.0.2"
+    "marked": "^15.0.11"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.0",
@@ -25,7 +25,10 @@
     "@types/node": "^22.15.17",
     "eslint": "^9.26.0",
     "eslint-plugin-format": "^1.0.1",
+    "eslint-plugin-svelte": "^3.9.0",
+    "sass": "^1.89.0",
     "svelte": "^5.28.1",
+    "svelte-check": "^4.2.1",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }

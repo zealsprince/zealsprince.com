@@ -11,7 +11,7 @@
     ],
     "baseUrl": ".",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "paths": {
       "@/*": [
         "src/*"
@@ -42,7 +42,8 @@
     "src/**/*.ts",
     "src/**/*.svelte",
     "src/**/*.d.ts",
-    "svelte.config.ts"
+    "svelte.config.js",
+    "vite.config.ts"
   ],
   "exclude": [
     "node_modules",

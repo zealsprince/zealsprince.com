@@ -1,14 +1,23 @@
 <script lang="ts">
   import Gallery from "./Gallery.svelte";
   import Threalte from "./Threalte.svelte";
-  import { fly } from 'svelte/transition';
-  import { onMount } from 'svelte';
-  export let data: { html: string; gallery: string[]; frontmatter: any; scene: string | null };
+  import { fly } from "svelte/transition";
+  import { onMount } from "svelte";
+  export let data: {
+    html: string;
+    gallery: string[];
+    frontmatter: any;
+    scene: string | null;
+  };
   let content = data.html;
   let gallery = data.gallery;
   let scene = data.scene;
-  let styleClass = data.frontmatter?.style ? `content-${data.frontmatter.style}` : '';
-  let customStyle = data.frontmatter?.style ? `/styles/content/${data.frontmatter.style}.css` : '';
+  let styleClass = data.frontmatter?.style
+    ? `content-${data.frontmatter.style}`
+    : "";
+  let customStyle = data.frontmatter?.style
+    ? `/styles/content/${data.frontmatter.style}.css`
+    : "";
   let showHeader = false;
   onMount(() => {
     showHeader = true;
@@ -21,7 +30,7 @@
 
 <div class="content-root {styleClass}">
   <div class="content-scene">
-    <Threalte scenePath={`@/scenes/${scene ?? 'SceneIndex'}.svelte`} />
+    <Threalte scenePath={`@/scenes/${scene ?? "SceneIndex"}.svelte`} />
   </div>
   {#if showHeader}
     <div class="content-header" in:fly={{ y: 60, duration: 700, opacity: 0 }}>
@@ -31,18 +40,21 @@
       {/if}
     </div>
   {/if}
-  <div style="position: relative; height: 100vh;"></div> <!-- Spacer for visualization and title overlay -->
+  <div style="position: relative; height: 100vh;"></div>
+  <!-- Spacer for visualization and title overlay -->
   <div class="content-body">
     <div class="content-markdown">
       {@html content}
     </div>
-      <div class="content-gallery">
-        <Gallery images={gallery} />
-      </div>
+    <div class="content-gallery">
+      <Gallery images={gallery} />
+    </div>
   </div>
 </div>
 
-<style>
+<style lang="scss">
+  @import "@/app.scss";
+
   /* Base content styles */
   .content-root {
     z-index: 1;
@@ -55,12 +67,16 @@
 
   .content-scene {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
   }
 
   .content-header {
     position: absolute;
-    bottom: 2rem; left: 2rem;
+    bottom: 2rem;
+    left: 2rem;
     color: var(--color-primary);
     text-align: left;
     max-width: 80vw;
@@ -81,11 +97,14 @@
   }
 
   .content-body {
+    border-top: 1px solid var(--color-secondary);
+    backdrop-filter: blur(16px);
     z-index: 5;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
+    min-height: calc(100vh - 128px);
     width: 100%;
     gap: 1.5rem;
   }
@@ -108,7 +127,7 @@
     align-items: center;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: $breakpoint-xl) {
     .content-header {
       max-width: 60vw;
     }
@@ -124,8 +143,7 @@
     }
   }
 
-
-  @media (max-width: 900px) {
+  @media (max-width: $breakpoint-lg) {
     .content-header {
       max-width: none;
     }
@@ -141,7 +159,7 @@
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: $breakpoint-md) {
     .content-title {
       font-size: var(--font-size-header);
     }
@@ -157,7 +175,7 @@
     }
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: $breakpoint-sm) {
     .content-title {
       font-size: var(--font-size-subtitle);
     }
