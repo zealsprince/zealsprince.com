@@ -1,4 +1,4 @@
-import type { EntryGenerator } from './$types'
+import type { EntryGenerator, PageLoad } from './$types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -9,12 +9,8 @@ export const entries: EntryGenerator = async () => {
   return files.filter(f => f.endsWith('.md')).map(f => ({ slug: f.replace(/\.md$/, '') }))
 }
 
-import type { PageLoad } from './$types';
-
-export const load: PageLoad = async ({ data, url }) => {
-  const editor = url.searchParams.get('editor') === 'true';
+export const load: PageLoad = async ({ data }) => {
   return {
     ...data, // Pass through data from +page.server.ts
-    editor,
   };
 };

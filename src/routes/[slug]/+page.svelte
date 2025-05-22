@@ -6,9 +6,16 @@
 
   export let data: PageData;
   let navItems = data?.navItems ?? [];
+
+  import { page } from "$app/state";
+  import { browser } from "$app/environment";
+
+  const editor = browser
+    ? page.url.searchParams.get("editor") === "true"
+    : false;
 </script>
 
-{#if !data.editor}
+{#if !editor}
   <NavMenu items={navItems} />
 {/if}
-<Content {data} editor={data.editor} />
+<Content {data} {editor} />

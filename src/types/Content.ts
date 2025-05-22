@@ -37,7 +37,6 @@ export interface ContentData {
 // Data structure for page components, extending ContentData
 export interface PageData extends ContentData {
   navItems: any[];
-  editor: boolean;
 }
 
 // A link after it has been assigned an icon component

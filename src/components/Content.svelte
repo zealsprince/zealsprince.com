@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import Links from "./Links.svelte";
   import type { RawLink, GalleryItem } from "$types/Content";
+  import { base } from "$app/paths";
 
   export let data: {
     html: string;
@@ -31,7 +32,7 @@
       : "";
 
     customStyle = data.frontmatter?.style
-      ? `/styles/content/${data.frontmatter.style}.css`
+      ? `${base}/styles/content/${data.frontmatter.style}.css`
       : "";
 
     if (!editor) {
