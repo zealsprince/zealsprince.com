@@ -1,4 +1,3 @@
-import process from 'node:process'
 import adapter from '@sveltejs/adapter-static' // Add this line
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 
@@ -19,10 +18,6 @@ export default {
       "$components/*": "src/components/*",
       "$scenes/*": "src/scenes/*",
       "$types/*": "src/types/*"
-    },
-
-    paths: {
-      base: process.env.NODE_ENV === 'production' ? '/zealsprince.com' : '',
     },
   },
 }
