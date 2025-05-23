@@ -122,7 +122,6 @@
   .content-root {
     z-index: 1;
     width: 100vw;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -181,7 +180,6 @@
     font-weight: var(--font-weight-light);
     font-size: var(--font-size-md);
     margin: 0.2rem 0 0 0;
-    font-weight: 400;
   }
 
   .content-body {
@@ -193,7 +191,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    min-height: calc(100vh - 128px);
     width: 100%;
     gap: 1.5rem;
   }
@@ -229,10 +226,6 @@
   }
 
   @media (max-width: vars.$breakpoint-xl) {
-    .content-header {
-      max-width: 60vw;
-    }
-
     .content-body {
       flex-direction: column;
       align-items: stretch;
@@ -240,7 +233,7 @@
     }
 
     .content-markdown {
-      max-width: 60vw;
+      max-width: 100vw;
     }
   }
 

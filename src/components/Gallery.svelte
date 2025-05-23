@@ -16,12 +16,12 @@
 <style lang="scss">
   @use "@/vars.scss" as vars;
   .gallery {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
     align-items: flex-start;
+    padding: 0 2rem;
     margin: 2rem 0;
-    gap: 1rem 1rem;
-    max-width: 1100px;
   }
 
   .gallery a {
@@ -53,22 +53,34 @@
 
   .gallery img {
     border: 1px solid var(--color-primary);
-    padding: 0.5rem;
-    max-width: 360px;
-    min-width: 360px;
-    min-height: 224px;
-    height: 224px;
-    width: 360px;
+    padding: 0.4rem;
+    aspect-ratio: 16 / 10;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
     margin: 0;
     display: block;
     filter: drop-shadow(8px 8px 0.5rem rgba(0, 0, 0, 0.1));
   }
 
+  @media (max-width: vars.$breakpoint-xl) {
+    .gallery {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      justify-content: space-between;
+    }
+
+    .gallery img {
+      padding: 0rem;
+    }
+  }
+
   @media (max-width: vars.$breakpoint-lg) {
     .gallery {
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       margin: 0;
+      padding: 0;
     }
 
     .gallery a {

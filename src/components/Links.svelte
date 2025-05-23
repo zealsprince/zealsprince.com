@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
     Box,
-    FileText,
+    FileUser,
     Github,
     Globe,
     Instagram,
@@ -11,7 +11,12 @@
     Twitter,
   } from "@lucide/svelte";
 
-  import { SiSteam } from "@icons-pack/svelte-simple-icons";
+  import {
+    Si500px,
+    SiArtstation,
+    SiDeviantart,
+    SiSteam,
+  } from "@icons-pack/svelte-simple-icons";
 
   import type { RawLink } from "$types/Content";
   import type { Component } from "svelte";
@@ -27,16 +32,19 @@
   // Map icon names to actual Svelte components
   const iconMap: Record<string, Component | any> = {
     default: Globe,
+    "500px": Si500px,
+    artstation: SiArtstation,
+    blog: Rss,
     box: Box,
+    cv: FileUser,
+    deviantart: SiDeviantart,
+    email: Mail,
     github: Github,
+    instagram: Instagram,
     linkedin: Linkedin,
     steam: SiSteam,
     twitter: Twitter,
     x: Twitter,
-    instagram: Instagram,
-    cv: FileText,
-    blog: Rss,
-    email: Mail,
   };
 
   let processedLinks: ProcessedLink[] = [];
@@ -108,19 +116,25 @@
     z-index: 10;
     background: none;
     pointer-events: auto;
-    filter: drop-shadow(4px 0px 0 var(--color-background));
   }
   .social-links a {
     color: var(--color-primary);
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    opacity: 0.8;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    background-color: var(--color-background);
+    backdrop-filter: blur(16px);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
   }
   .social-links a:hover {
     opacity: 1;
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.25);
   }
 
   @media (max-width: 900px) {

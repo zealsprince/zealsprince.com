@@ -10,6 +10,21 @@ links:
   - title: Steam
     icon: steam
     url: https://steamcommunity.com/id/zealsprince
+  - title: ArtStation
+    icon: artstation
+    url: https://www.artstation.com/zealsprince
+  - title: DeviantArt
+    icon: deviantart
+    url: https://www.deviantart.com/zealsprince
+  - title: X
+    icon: x
+    url: https://twitter.com/zealsprince
+  - title: Instagram
+    icon: instagram
+    url: https://www.instagram.com/zealsprince/
+  - title: 500px
+    icon: 500px
+    url: https://500px.com/p/zealsprince?view=photos
 gallery:
   - title: Lethal Company - Community Art Competition
     image: https://i.imgur.com/3fyVDTi.png
