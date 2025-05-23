@@ -2,22 +2,20 @@
   import { lerp } from "$/lib/client/math";
   import type { SceneProps } from "$/types/Scene";
   import { T } from "@threlte/core";
-  import { useThrelte } from "@threlte/core";
-  import { onMount, onDestroy } from "svelte";
+  import { useThrelte, useTask } from "@threlte/core";
+  import { onMount } from "svelte";
 
   export let props: SceneProps;
 
-  const { invalidate, size } = useThrelte();
+  const { size } = useThrelte();
 
   let cubeRotation = 0;
-  let animationFrameId: number;
 
   let smoothMouseX = 0;
   let smoothMouseY = 0;
   const smoothFactor = 0.001; // Lower is slower, higher is snappier
 
-  function start() {
-    // Generate random number of cubes (3-15)
+  function initalizeScene() {
     const numCubes = Math.floor(randomBetween(8, 32));
     cubes = Array.from({ length: numCubes }, () => ({
       position: [
@@ -30,30 +28,21 @@
     }));
   }
 
-  function animate() {
+  // Create an animation task using Threlte's scheduler
+  const { start } = useTask("cube-animation", (delta) => {
     if (props.editor) return;
 
     smoothMouseX = lerp(smoothMouseX, props.mouseX, smoothFactor);
     smoothMouseY = lerp(smoothMouseY, props.mouseY, smoothFactor);
 
-    cubeRotation += 0.0005;
-
-    invalidate();
-
-    animationFrameId = requestAnimationFrame(animate);
-  }
+    // Use delta time to make rotation frame-rate independent
+    cubeRotation += 0.05 * delta;
+  });
 
   onMount(() => {
     if (typeof window !== "undefined") {
+      initalizeScene();
       start();
-
-      animationFrameId = requestAnimationFrame(animate);
-    }
-  });
-
-  onDestroy(() => {
-    if (typeof window !== "undefined") {
-      cancelAnimationFrame(animationFrameId);
     }
   });
 

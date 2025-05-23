@@ -1,6 +1,6 @@
 <script lang="ts">
   import Gallery from "./Gallery.svelte";
-  import Threalte from "./Threalte.svelte";
+  import Threalte from "./Threlte.svelte";
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
   import Links from "./Links.svelte";
@@ -151,7 +151,11 @@
     line-height: 1.2;
     text-transform: uppercase;
     margin: 0;
+    width: 100%;
     max-width: var(--content-text-max-width);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
     filter: drop-shadow(16px 4px 0 var(--color-background));
   }
 
