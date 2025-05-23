@@ -2,16 +2,20 @@
   import { goto } from "$app/navigation";
   import { fly, fade } from "svelte/transition";
   import { onMount, onDestroy } from "svelte";
-  export let items: Array<{
-    slug: string;
-    title: string;
-    navigation?: string;
-    order?: number;
-    style?: string;
-  }> = [];
+  import { page } from "$app/state";
+  import { Box, Rss, UserRound } from "@lucide/svelte";
+  import type { Frontmatter } from "$/types/Content";
+  export let items: Frontmatter[] = [];
   let open = false;
   let isPointer = false;
   let pointerListener: ((e: MediaQueryListEvent) => void) | null = null;
+
+  // Organize items by category
+  $: categories = {
+    About: items.filter((item) => item.category === "About" || !item.category),
+    Projects: items.filter((item) => item.category === "Projects"),
+    Blog: items.filter((item) => item.category === "Blog"),
+  };
 
   onMount(() => {
     const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -33,6 +37,16 @@
     goto(slug === "index" ? "/" : `/${slug}`);
     open = false;
   }
+
+  // Check if a route is currently active
+  function isActive(slug: string): boolean {
+    const currentPath = page.url.pathname;
+    if (slug === "index") {
+      return currentPath === "/" || currentPath === "";
+    }
+    return currentPath === `/${slug}` || currentPath === `/${slug}/`;
+  }
+
   $: navToggle;
   $: navToggle = open;
 </script>
@@ -73,14 +87,60 @@
   </button>
   {#if open}
     <div class="nav-list open" transition:fly={{ y: -10, duration: 200 }}>
-      {#each items as item}
-        <a
-          class="nav-link"
-          href={item.slug === "index" ? "/" : `/${item.slug}`}
-          on:click|preventDefault={() => navTo(item.slug)}
-          >{item.navigation ?? item.title}</a
-        >
-      {/each}
+      <!-- About section -->
+      {#if categories.About.length > 0}
+        <div class="nav-category">
+          <h3 class="category-title">
+            <UserRound />
+            About
+          </h3>
+          {#each categories.About as item}
+            <a
+              class="nav-link {isActive(item.slug) ? 'active' : ''}"
+              href={item.slug === "index" ? "/" : `/${item.slug}`}
+              on:click|preventDefault={() => navTo(item.slug)}
+              >{item.navigation ?? item.title}</a
+            >
+          {/each}
+        </div>
+      {/if}
+
+      <!-- Projects section -->
+      {#if categories.Projects.length > 0}
+        <div class="nav-category">
+          <h3 class="category-title">
+            <Box />
+            Projects
+          </h3>
+          {#each categories.Projects as item}
+            <a
+              class="nav-link {isActive(item.slug) ? 'active' : ''}"
+              href={item.slug === "index" ? "/" : `/${item.slug}`}
+              on:click|preventDefault={() => navTo(item.slug)}
+              >{item.navigation ?? item.title}</a
+            >
+          {/each}
+        </div>
+      {/if}
+
+      <!-- Blog section -->
+      {#if categories.Blog.length > 0}
+        <div class="nav-category">
+          <h3 class="category-title">
+            <Rss />
+            Blog
+          </h3>
+          {#each categories.Blog as item}
+            <a
+              class="nav-link {isActive(item.slug) ? 'active' : ''}"
+              href={item.slug === "index" ? "/" : `/${item.slug}`}
+              on:click|preventDefault={() => navTo(item.slug)}
+              >{item.navigation ?? item.title}</a
+            >
+          {/each}
+        </div>
+      {/if}
+
       <div class="nav-fade"></div>
     </div>
   {/if}
@@ -201,6 +261,21 @@
     border-radius: 4px;
   }
 
+  .nav-category {
+    margin-bottom: 1rem;
+  }
+
+  .category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--font-size-md);
+    color: var(--color-text);
+    margin: 0.5rem 0 0.25rem 0.5rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.05em;
+  }
+
   .nav-link {
     color: var(--color-primary);
     text-decoration: none;
@@ -218,9 +293,28 @@
 
   .nav-link:hover,
   .nav-link:focus {
-    color: var(--color);
-    letter-spacing: 0.08em;
+    color: var(--color-link) !important;
+    letter-spacing: 0.08em !important;
     background: none;
+  }
+
+  .nav-link.active {
+    color: var(--color-link);
+    letter-spacing: 0.06em;
+    font-weight: var(--font-weight-medium);
+    position: relative;
+  }
+
+  .nav-link.active::after {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background-color: var(--color);
   }
 
   .nav-fade {
@@ -241,6 +335,10 @@
     .nav-link {
       font-size: var(--font-size-md);
       line-height: var(--font-size-md);
+    }
+
+    .category-title {
+      font-size: calc(var(--font-size-sm) * 0.9);
     }
   }
 </style>

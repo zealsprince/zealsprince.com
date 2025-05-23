@@ -164,17 +164,21 @@
     top: 1.5rem;
     right: 2rem;
     color: var(--color-primary);
-    text-align: left;
-    max-width: 80vw;
+    text-align: right;
+    max-width: 70vw;
     font-size: var(--font-size-md);
     font-weight: 100;
     line-height: var(--font-size-subtitle);
     text-transform: uppercase;
     margin: 0;
     z-index: 100;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .content-subtitle {
+    font-weight: var(--font-weight-light);
     font-size: var(--font-size-md);
     margin: 0.2rem 0 0 0;
     font-weight: 400;
@@ -271,10 +275,6 @@
   @media (max-width: vars.$breakpoint-sm) {
     .content-title {
       font-size: var(--font-size-md);
-    }
-
-    .content-subtitle {
-      font-size: var(--font-size-xs);
     }
   }
 </style>

@@ -14,10 +14,10 @@ export default {
       strict: true,
     }),
     alias: {
-      "$/*": "src/*",
-      "$components/*": "src/components/*",
-      "$scenes/*": "src/scenes/*",
-      "$types/*": "src/types/*"
+      '$/*': 'src/*',
+      '$components/*': 'src/components/*',
+      '$scenes/*': 'src/scenes/*',
+      '$types/*': 'src/types/*',
     },
   },
 }

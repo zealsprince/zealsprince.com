@@ -4,7 +4,8 @@ title: zealsprince
 date: 2025-05-18
 scene: SceneZealsprince
 order: 2
-style: zealsprince
+style: me
+category: About
 links:
   - title: Steam
     icon: steam

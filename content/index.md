@@ -4,7 +4,6 @@ title: Andrew Lake
 subtitle: Software Lead / Engineer / Architect
 date: 2025-05-18
 scene: SceneIndex
-style: index
 order: 1
 links:
   - title: GitHub

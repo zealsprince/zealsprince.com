@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "svelte": "npx sv"
+    "svelte": "npx sv",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "@icons-pack/svelte-simple-icons": "^5.0.0",

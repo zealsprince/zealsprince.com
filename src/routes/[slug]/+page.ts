@@ -12,5 +12,5 @@ export const entries: EntryGenerator = async () => {
 export const load: PageLoad = async ({ data }) => {
   return {
     ...data, // Pass through data from +page.server.ts
-  };
-};
+  }
+}

@@ -105,7 +105,7 @@
     display: flex;
     flex-direction: row;
     gap: 1.2rem;
-    z-index: 200;
+    z-index: 10;
     background: none;
     pointer-events: auto;
     filter: drop-shadow(4px 0px 0 var(--color-background));

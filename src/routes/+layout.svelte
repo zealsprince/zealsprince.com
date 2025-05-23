@@ -1,11 +1,11 @@
 <script lang="ts">
-  import "../app.scss";
+  import { page } from '$app/state'
 
-  import { fade } from "svelte/transition";
-  import { page } from "$app/state";
+  import { fade } from 'svelte/transition'
+  import '../app.scss'
   // No longer exporting data, since layout no longer receives navItems
 
-  let { children } = $props();
+  const { children } = $props()
 </script>
 
 <div class="layout-root">
