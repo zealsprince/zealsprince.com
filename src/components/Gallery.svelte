@@ -1,30 +1,58 @@
 <script lang="ts">
-  import type { GalleryItem } from "$types/Content";
-  export let images: GalleryItem[] = [];
+  import type { GallerySection } from "$types/Content";
+  export let images: GallerySection[] = [];
 </script>
 
 {#if images.length}
-  <div class="gallery">
-    {#each images as img}
-      <a href={img.link ?? img.url} target="_blank" rel="noopener">
-        <img src={img.image} alt={img.title || "Gallery"} />
-      </a>
-    {/each}
-  </div>
+  {#each images as section}
+    <div class="gallery">
+      {#if section.name && section.showName !== false}
+        <h1 class="gallery-name">{section.name}</h1>
+      {/if}
+      <div class="gallery-section">
+        {#each section.items as img}
+          <a href={img.url ?? img.image} target="_blank" rel="noopener">
+            <img src={img.image} alt={img.name || "Gallery"} />
+          </a>
+        {/each}
+      </div>
+    </div>
+  {/each}
 {/if}
 
 <style lang="scss">
   @use "@/vars.scss" as vars;
-  .gallery {
+
+  .gallery-name {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-light);
+    margin: 1rem 0 0 2rem;
+    color: var(--color-primary);
+    text-transform: uppercase;
+
+    display: flex;
+    align-items: center;
+
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: var(--color-secondary);
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+
+  .gallery-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     align-items: flex-start;
     padding: 0 2rem;
-    margin: 2rem 0;
+    margin: 1rem 0;
   }
 
-  .gallery a {
+  .gallery-section a {
     position: relative;
     display: block;
 
@@ -51,7 +79,7 @@
     }
   }
 
-  .gallery img {
+  .gallery-section img {
     border: 1px solid var(--color-primary);
     padding: 0.4rem;
     aspect-ratio: 16 / 10;
@@ -64,18 +92,26 @@
   }
 
   @media (max-width: vars.$breakpoint-xl) {
-    .gallery {
+    .gallery-name {
+      margin-bottom: 1rem;
+
+      &::after {
+        margin-right: 2rem;
+      }
+    }
+
+    .gallery-section {
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       justify-content: space-between;
     }
 
-    .gallery img {
+    .gallery-section img {
       padding: 0rem;
     }
   }
 
   @media (max-width: vars.$breakpoint-lg) {
-    .gallery {
+    .gallery-section {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -83,7 +119,7 @@
       padding: 0;
     }
 
-    .gallery a {
+    .gallery-section a {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -94,7 +130,7 @@
       }
     }
 
-    .gallery img {
+    .gallery-section img {
       max-width: 100%;
       min-width: 100%;
       width: inherit;

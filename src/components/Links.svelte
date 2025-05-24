@@ -62,7 +62,7 @@
 
           return {
             href: link.url,
-            label: link.title,
+            label: link.name,
             iconComponent: iconComponent || null, // Fallback to null if not found
           };
         })
@@ -134,6 +134,7 @@
   .social-links a:hover {
     opacity: 1;
     transform: scale(1.1);
+    color: var(--color-link) !important;
     background-color: rgba(255, 255, 255, 0.25);
   }
 

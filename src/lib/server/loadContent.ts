@@ -1,4 +1,4 @@
-import type { ContentData, Frontmatter, GalleryItem } from '$types/Content' // Added GalleryItem type
+import type { ContentData, Frontmatter, GallerySection } from '$types/Content' // Added GallerySection type
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { error } from '@sveltejs/kit'
@@ -18,30 +18,36 @@ export async function loadContent(slug: string): Promise<ContentData> {
   const frontmatter = data as Frontmatter // Cast to Frontmatter type
 
   const html = await marked.parse(content) // Await the promise from marked.parse
-  // Ensure gallery is an array of GalleryItem objects
-  let gallery: GalleryItem[] = []
-  if (Array.isArray(frontmatter.gallery)) {
-    gallery = frontmatter.gallery.map((item: any) => {
-      if (typeof item === 'string') {
-        return {
-          title: '',
-          image: item,
-          url: item,
-          link: item,
+
+  // Process gallery sections
+  const gallerySections: GallerySection[] = []
+
+  if (frontmatter.gallery && Array.isArray(frontmatter.gallery)) {
+    // Process the new array format where each item is an object with a single key (section name)
+    // and the value is an array of gallery items
+    for (const sectionObj of frontmatter.gallery) {
+      // Each object should have only one key (the section title)
+      const entries = Object.entries(sectionObj)
+      if (entries.length > 0) {
+        const [name, items] = entries[0]
+
+        // Check if this is a special "no-name" section
+        const showName = name !== 'no-name'
+        const displayName = showName ? name : ''
+
+        // Process items if they exist and are in array format
+        if (Array.isArray(items)) {
+          gallerySections.push({
+            name: displayName,
+            showName,
+            items,
+          })
         }
       }
-      else {
-        return {
-          title: item.title ?? '',
-          image: item.image ?? item.url ?? '',
-          url: item.url ?? item.image ?? '',
-          link: typeof item.link === 'string' ? item.link : (item.url ?? item.image ?? ''),
-        }
-      }
-    })
+    }
   }
 
   const scene = frontmatter.scene ?? null
   const links = frontmatter.links ?? []
-  return { html, gallery, frontmatter, scene, links }
+  return { html, gallery: gallerySections, frontmatter, scene, links }
 }

@@ -2,21 +2,27 @@
 import type { Component } from 'svelte'
 
 export interface RawLink {
-  title: string
+  name: string
   icon?: string // Icon name, e.g., "github", "linkedin"
   url: string
 }
 
 export interface GalleryItem {
-  title?: string
+  name?: string
   image: string
-  url: string
-  link?: string // Optional: link to open when image is clicked
+  url?: string // Optional URL for the item
+}
+
+// New type for gallery sections with title and items
+export interface GallerySection {
+  name: string
+  showName?: boolean // Added to control title visibility
+  items: GalleryItem[]
 }
 
 export interface Frontmatter {
   navigation?: string
-  title?: string
+  heading?: string
   date?: string // Consider using Date if parsed and formatting in component
   scene?: string | null
   style?: string
@@ -24,13 +30,13 @@ export interface Frontmatter {
   category?: 'About' | 'Projects' | 'Blog' // Category field for content organization
   hidden?: boolean // Whether to hide the item from navigation
   links?: RawLink[]
-  gallery?: GalleryItem[]
+  gallery?: Array<Record<string, Array<GalleryItem>>> // Only support sectioned galleries now
   [key: string]: any // For any other properties in frontmatter
 }
 
 export interface ContentData {
   html: string
-  gallery: GalleryItem[]
+  gallery: GallerySection[] // Changed from GalleryItem[] to GallerySection[]
   frontmatter: Frontmatter
   scene: string | null
   links: RawLink[] // Raw links from frontmatter

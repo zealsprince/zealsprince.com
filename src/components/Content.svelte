@@ -4,14 +4,14 @@
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
   import Links from "./Links.svelte";
-  import type { RawLink, GalleryItem } from "$types/Content";
+  import type { RawLink, GallerySection, Frontmatter } from "$types/Content";
   import { base } from "$app/paths";
   import { SceneName } from "$/types/Scene";
 
   export let data: {
     html: string;
-    gallery: GalleryItem[];
-    frontmatter: any;
+    gallery: GallerySection[];
+    frontmatter: Frontmatter;
     scene: string | null;
     links: RawLink[];
   };
@@ -19,10 +19,11 @@
 
   // Variables for non-editor mode
   let content = "";
-  let gallery: GalleryItem[] = [];
+  let gallery: GallerySection[] = [];
   let styleClass = "";
   let customStyle = "";
   let minifyHeader: boolean = false;
+  let contentBody: HTMLElement; // Reference to the content body element
 
   // Scene is used in both modes
   let scene: SceneName = (data.scene as SceneName) ?? SceneName.SceneIndex;
@@ -51,6 +52,17 @@
     const scrollY = window.scrollY || window.pageYOffset;
     const hideThreshold = window.innerHeight * 0.8;
     minifyHeader = scrollY > hideThreshold;
+  }
+
+  function scrollToContent(event: MouseEvent) {
+    event.preventDefault();
+
+    if (contentBody) {
+      contentBody.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   }
 
   onMount(() => {
@@ -85,23 +97,22 @@
         in:fly={{ y: -60, duration: 700, opacity: 0 }}
         out:fly={{ y: -60, duration: 200, opacity: 0 }}
       >
-        <h1 class="content-title">{data.frontmatter?.title}</h1>
-        {#if data.frontmatter?.subtitle}
-          <h2 class="content-subtitle">{data.frontmatter.subtitle}</h2>
-        {/if}
+        <a href="#content" type="button" on:click={scrollToContent}>
+          <h1 class="content-heading">{data.frontmatter.heading}</h1>
+        </a>
       </div>
     {:else}
       <h1
-        class="content-title-fixed"
+        class="content-heading-fixed"
         transition:fly={{ y: 20, duration: 200, opacity: 0 }}
       >
-        {data.frontmatter?.title}
+        {data.frontmatter?.heading}
       </h1>
     {/if}
     <div style="position: relative; height: 100vh;"></div>
     <!-- Spacer for visualization and title overlay -->
-    <div class="content-body">
-      <div class="content-markdown">
+    <div class="content-body" bind:this={contentBody}>
+      <div id="content" class="content-markdown markdown">
         {@html content}
       </div>
       <div class="content-gallery">
@@ -144,7 +155,8 @@
     max-width: 80vw;
   }
 
-  .content-title {
+  .content-heading {
+    color: var(--color-primary);
     font-size: var(--font-size-xl);
     font-weight: 100;
     line-height: 1.2;
@@ -155,10 +167,15 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
-    filter: drop-shadow(16px 4px 0 var(--color-background));
+
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--color-link);
+    }
   }
 
-  .content-title-fixed {
+  .content-heading-fixed {
     position: fixed;
     top: 1.5rem;
     right: 2rem;
@@ -176,15 +193,10 @@
     text-overflow: ellipsis;
   }
 
-  .content-subtitle {
-    font-weight: var(--font-weight-light);
-    font-size: var(--font-size-md);
-    margin: 0.2rem 0 0 0;
-  }
-
   .content-body {
+    min-height: 90vh;
     border-top: 1px solid var(--color-secondary);
-    background: color-mix(in srgb, var(--color-background) 60%, transparent);
+    background: color-mix(in srgb, var(--color-background) 75%, transparent);
     backdrop-filter: blur(16px);
     z-index: 5;
     display: flex;
@@ -201,7 +213,7 @@
     text-align: justify;
     color: var(--color-text);
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 0 2rem;
   }
 
   .content-gallery {
@@ -210,6 +222,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
   }
 
   /* Styles for editor mode to ensure Threalte can take full space if needed */
@@ -238,12 +251,8 @@
   }
 
   @media (max-width: vars.$breakpoint-lg) {
-    .content-title {
+    .content-heading {
       font-size: var(--font-size-lg);
-    }
-
-    .content-subtitle {
-      font-size: var(--font-size-sm);
     }
 
     .content-body {
@@ -266,7 +275,7 @@
   }
 
   @media (max-width: vars.$breakpoint-sm) {
-    .content-title {
+    .content-heading {
       font-size: var(--font-size-md);
     }
   }

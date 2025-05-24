@@ -1,7 +1,6 @@
 ---
 navigation: Andrew Lake
-title: Andrew Lake
-subtitle: Software Lead / Engineer / Architect
+heading: Andrew Lake
 date: 2025-05-18
 scene: SceneIndex
 order: 1
@@ -22,7 +21,7 @@ links:
 #   - /images/mod1.jpg
 ---
 
-## About Me
+# A little bit of everything
 
 I've spent over a decade working as a software engineer and architect, and it's been one heck of a ride. From indie game development to co-founding a successful startup, I've had the chance to build some awesome things over the years!
 
