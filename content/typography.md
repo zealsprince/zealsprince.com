@@ -1,8 +1,7 @@
 ---
 hidden: true
 navigation: Typography
-title: Typography Examples
-subtitle: Markdown Formatting Guide
+heading: Typography
 date: 2025-05-22
 scene: SceneIndex
 links:
@@ -13,6 +12,8 @@ links:
     icon: github
     url: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
 ---
+
+# Typography Examples
 
 This document demonstrates various elements of Markdown formatting and typography that can be used in your content.
 
