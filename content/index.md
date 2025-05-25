@@ -4,6 +4,7 @@ heading: Andrew Lake
 date: 2025-05-18
 scene: SceneIndex
 order: 1
+style: index
 links:
   - title: Email
     icon: email

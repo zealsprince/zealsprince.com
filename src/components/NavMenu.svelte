@@ -172,7 +172,7 @@
     left: 0;
     width: 100%;
     height: 5.5rem;
-    background: color-mix(in srgb, var(--color-background) 60%, transparent);
+    background: color-mix(in srgb, var(--color-background) 40%, transparent);
     border-bottom: 1px solid var(--color-secondary);
     backdrop-filter: blur(16px);
     pointer-events: none;

@@ -196,7 +196,7 @@
   .content-body {
     min-height: 90vh;
     border-top: 1px solid var(--color-secondary);
-    background: color-mix(in srgb, var(--color-background) 75%, transparent);
+    background: color-mix(in srgb, var(--color-background) 70%, transparent);
     backdrop-filter: blur(16px);
     z-index: 5;
     display: flex;
