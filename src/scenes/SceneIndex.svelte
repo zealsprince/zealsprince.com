@@ -4,7 +4,7 @@
   import { useThrelte, useTask } from "@threlte/core";
   import { onMount } from "svelte";
 
-  // Import the shader
+  // Import the shaders
   import fragmentShader from "$/shaders/index.glsl";
   import { randomBetween } from "$/lib/client/math";
 
@@ -15,24 +15,36 @@
   let smoothMouseX = 0;
   let smoothMouseY = 0;
 
+  const softVariation = randomBetween(0, 1) > 0.2;
+
   // Shader uniforms
   let shaderUniforms = {
     u_time: { value: 0.0 },
-    u_resolution: { value: [1920, 1080] },
-    u_offset_skew: { value: randomBetween(-4, 6) },
-    u_offset_waves: { value: randomBetween(-2, 1) },
+    u_resolution: { value: [2048, 1024] },
+    u_iterations: { value: softVariation ? 12 : 6 },
+    u_offset_skew: {
+      value: softVariation
+        ? randomBetween(0.15, 0.8) * (randomBetween(0, 1.0) > 0.5 ? -1 : 1)
+        : randomBetween(2, 4),
+    },
+    u_offset_waves: { value: randomBetween(0, 1) },
     u_red: { value: randomBetween(-0.5, 1) },
-    u_green: { value: randomBetween(0, 1.5) },
-    u_blue: { value: randomBetween(-0.5, 1) },
-    u_scroll: { value: 0 },
+    u_green: { value: randomBetween(-2, 0) },
+    u_blue: { value: randomBetween(-4, 1) },
+  };
+
+  // Refractive sphere uniforms
+  let refractiveUniforms = {
+    u_time: { value: 0.0 },
+    u_resolution: { value: [2048, 1024] },
   };
 
   // Create an animation task using Threlte's scheduler
   const { start } = useTask("cube-animation", (delta) => {
     if (props.editor) return;
-
     // Update shader time uniform
     shaderUniforms.u_time.value += delta;
+    refractiveUniforms.u_time.value += delta;
   });
 
   onMount(() => {
@@ -40,14 +52,6 @@
       start();
     }
   });
-
-  // Update resolution when size changes
-  $: if ($size) {
-    shaderUniforms.u_resolution.value = [$size.width, $size.height];
-  }
-
-  // Update scroll uniform
-  $: shaderUniforms.u_scroll.value = props.scrollY || 0;
 
   $: cameraX = props.editor ? 0 : smoothMouseX / $size.width - 0.5;
 
