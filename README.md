@@ -68,6 +68,8 @@ Write your content below the frontmatter using Markdown. All content files are a
 
 The `index.md` file is the main entry point for the site and serves as the homepage.
 
+You can also use Svelte components directly in your Markdown via the `::component{props}::` syntax. You'll need to make sure to register any components you want to use in the `src/components/Content.svelte` component.
+
 ## License
 
 [MIT](LICENSE)

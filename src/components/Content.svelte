@@ -1,282 +1,109 @@
 <script lang="ts">
-  import Gallery from "./Gallery.svelte";
-  import Threalte from "./Threlte.svelte";
-  import { fly } from "svelte/transition";
-  import { onMount } from "svelte";
-  import Links from "./Links.svelte";
-  import type { RawLink, GallerySection, Frontmatter } from "$types/Content";
-  import { base } from "$app/paths";
-  import { SceneName } from "$/types/Scene";
+  import { onMount, mount } from "svelte";
 
-  export let data: {
-    html: string;
-    gallery: GallerySection[];
-    frontmatter: Frontmatter;
-    scene: string | null;
-    links: RawLink[];
+  import spinner from "$components/Spinner.svelte";
+  import languages from "$components/Embeds/Languages.svelte";
+
+  export let html: string;
+  export let components: Array<{
+    name: string;
+    props: Record<string, any>;
+    id: string;
+  }> = [];
+
+  let container: HTMLDivElement;
+  let loadedComponents: Record<string, any> = {};
+
+  // Component registry - you can extend this
+  const componentMap = {
+    spinner: () => spinner,
+    languages: () => languages,
+    // Add more components as needed
   };
-  export let editor: boolean = false; // New prop to control editor mode
 
-  // Variables for non-editor mode
-  let content = "";
-  let gallery: GallerySection[] = [];
-  let styleClass = "";
-  let customStyle = "";
-  let minifyHeader: boolean = false;
-  let contentBody: HTMLElement; // Reference to the content body element
+  async function loadComponent(name: string) {
+    if (loadedComponents[name]) return loadedComponents[name];
 
-  // Scene is used in both modes
-  let scene: SceneName = (data.scene as SceneName) ?? SceneName.SceneIndex;
-
-  $: {
-    styleClass = data.frontmatter?.style
-      ? `content-${data.frontmatter.style}`
-      : "";
-
-    customStyle = data.frontmatter?.style
-      ? `${base}/styles/content/${data.frontmatter.style}.css`
-      : "";
-
-    if (!editor) {
-      content = data.html || "";
-      gallery = data.gallery || [];
-    } else {
-      // Reset or set defaults for editor mode if necessary
-      content = "";
-      gallery = [];
+    try {
+      const module = await componentMap[name as keyof typeof componentMap]?.();
+      if (module) {
+        loadedComponents[name] = module;
+        return module;
+      }
+    } catch (e) {
+      console.warn(`Failed to load component: ${name}`, e);
     }
+    return null;
   }
 
-  function handleScroll() {
-    if (editor) return; // No scroll handling for header in editor mode
-    const scrollY = window.scrollY || window.pageYOffset;
-    const hideThreshold = window.innerHeight * 0.8;
-    minifyHeader = scrollY > hideThreshold;
-  }
+  async function renderComponents() {
+    if (!container || !components.length) return;
 
-  function scrollToContent(event: MouseEvent) {
-    event.preventDefault();
+    for (const component of components) {
+      const placeholder = container.querySelector(
+        `[data-component-id="${component.id}"]`,
+      );
+      if (!placeholder) continue;
 
-    if (contentBody) {
-      contentBody.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      const ComponentClass = await loadComponent(component.name);
+      if (!ComponentClass) continue;
+
+      try {
+        // Create a wrapper div for the component
+        const wrapper = document.createElement("div");
+        wrapper.className = "dynamic-component";
+
+        // Create the Svelte component instance using Svelte 5 mount API
+        mount(ComponentClass, {
+          target: wrapper,
+          props: component.props,
+        });
+
+        // Replace the placeholder with the component
+        placeholder.replaceWith(wrapper);
+      } catch (e) {
+        console.error(`Failed to render component ${component.name}:`, e);
+        placeholder.innerHTML = `<div class="component-error">Failed to load component: ${component.name}</div>`;
+      }
     }
   }
 
   onMount(() => {
-    if (editor) return; // No scroll listener setup in editor mode
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    renderComponents();
   });
+
+  // Re-render when components change
+  $: if (container && components) {
+    renderComponents();
+  }
 </script>
 
-{#if customStyle}
-  <link rel="stylesheet" href={customStyle} />
-{/if}
+<div bind:this={container} class="dynamic-content">
+  {@html html}
+</div>
 
-{#if editor}
-  <!-- Editor Mode: Only Threalte, configured for editing -->
-  <div class="content-root content-editor-mode">
-    <Threalte {scene} editorModeActive={true} />
-  </div>
-{:else}
-  <!-- Default Content Display -->
-  <div class="content-root {styleClass}">
-    <div class="content-scene">
-      <Threalte {scene} />
-    </div>
-    {#if !minifyHeader}
-      <div
-        class="content-header"
-        in:fly={{ y: -60, duration: 700, opacity: 0 }}
-        out:fly={{ y: -60, duration: 200, opacity: 0 }}
-      >
-        <a href="#content" type="button" on:click={scrollToContent}>
-          <h1 class="content-heading">{data.frontmatter.heading}</h1>
-        </a>
-      </div>
-    {:else}
-      <h1
-        class="content-heading-fixed"
-        transition:fly={{ y: 20, duration: 200, opacity: 0 }}
-      >
-        {data.frontmatter?.heading}
-      </h1>
-    {/if}
-    <div style="position: relative; height: 100vh;"></div>
-    <!-- Spacer for visualization and title overlay -->
-    <div class="content-body" bind:this={contentBody}>
-      <div id="content" class="content-markdown markdown">
-        {@html content}
-      </div>
-      <div class="content-gallery">
-        <Gallery images={gallery} />
-      </div>
-    </div>
-    <!-- Social Links: bottom right -->
-    {#if !minifyHeader && !editor}
-      <Links links={data.links} />
-    {/if}
-  </div>
-{/if}
-
-<style lang="scss">
-  @use "@/vars.scss" as vars;
-
-  /* Base content styles */
-  .content-root {
-    z-index: 1;
-    width: 100vw;
+<style>
+  .dynamic-content :global(.component-placeholder) {
+    min-height: 2rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
-  }
-
-  .content-scene {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-  }
-
-  .content-header {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    color: var(--color-primary);
-    text-align: left;
-    max-width: 80vw;
-  }
-
-  .content-heading {
-    color: var(--color-primary);
-    font-size: var(--font-size-xl);
-    font-weight: 100;
-    line-height: 1.2;
-    text-transform: uppercase;
-    margin: 0;
-    width: 100%;
-    max-width: var(--content-text-max-width);
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-
-    transition: all 0.2s ease;
-
-    &:hover {
-      color: var(--color-link);
-    }
-  }
-
-  .content-heading-fixed {
-    position: fixed;
-    top: 1.5rem;
-    right: 2rem;
-    color: var(--color-primary);
-    text-align: right;
-    max-width: 70vw;
-    font-size: var(--font-size-md);
-    font-weight: 100;
-    line-height: var(--font-size-subtitle);
-    text-transform: uppercase;
-    margin: 0;
-    z-index: 100;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .content-body {
-    min-height: 90vh;
-    border-top: 1px solid var(--color-secondary);
-    background: color-mix(in srgb, var(--color-background) 70%, transparent);
-    backdrop-filter: blur(16px);
-    z-index: 5;
-    display: flex;
-    flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    gap: 1.5rem;
+    border: 1px dashed var(--color-secondary);
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    opacity: 0.5;
   }
 
-  .content-markdown {
-    flex: 2 1 0;
-    max-width: var(--content-text-max-width);
-    text-align: justify;
-    color: var(--color-text);
-    border-radius: 1rem;
-    padding: 0 2rem;
+  .dynamic-content :global(.component-error) {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid #ff6b6b;
+    border-radius: 0.5rem;
+    background: rgba(255, 107, 107, 0.1);
   }
 
-  .content-gallery {
-    flex: 1 1 0;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-  }
-
-  /* Styles for editor mode to ensure Threalte can take full space if needed */
-  .content-editor-mode {
-    width: 100vw;
-    height: 100vh;
-    display: flex; /* Ensure Threalte can expand */
-    align-items: stretch;
-    justify-content: stretch;
-  }
-  .content-editor-mode > :global(div) {
-    /* Target Threalte's wrapper */
-    flex-grow: 1;
-  }
-
-  @media (max-width: vars.$breakpoint-xl) {
-    .content-body {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 2rem;
-    }
-
-    .content-markdown {
-      max-width: 100vw;
-    }
-  }
-
-  @media (max-width: vars.$breakpoint-lg) {
-    .content-heading {
-      font-size: var(--font-size-lg);
-    }
-
-    .content-body {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1.5rem;
-    }
-
-    .content-markdown {
-      max-width: none;
-    }
-  }
-
-  @media (max-width: vars.$breakpoint-md) {
-    .content-body {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
-    }
-  }
-
-  @media (max-width: vars.$breakpoint-sm) {
-    .content-heading {
-      font-size: var(--font-size-md);
-    }
+  .dynamic-content :global(.dynamic-component) {
+    margin: 1rem 0;
   }
 </style>

@@ -40,6 +40,7 @@ export interface ContentData {
   frontmatter: Frontmatter
   scene: string | null
   links: RawLink[] // Raw links from frontmatter
+  components?: Array<{ name: string, props: Record<string, any>, id: string }> // Dynamic components
 }
 
 // Data structure for page components, extending ContentData

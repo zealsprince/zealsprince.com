@@ -1,9 +1,9 @@
 ---
 hidden: true
-navigation: Typography
-heading: Typography
+navigation: Markdown
+heading: Markdown
 date: 2025-05-22
-scene: SceneIndex
+scene: SceneCubes
 links:
   - title: Markdown Guide
     icon: globe
@@ -15,7 +15,7 @@ links:
 
 # Typography Examples
 
-This document demonstrates various elements of Markdown formatting and typography that can be used in your content.
+This document demonstrates various elements of Markdown formatting and typography that can be used in the content as well as embedding Svelte components directly.
 
 ## Heading 2
 
@@ -160,32 +160,6 @@ Aligned tables:
 | Left         | Center         | Right          |
 | Aligned      | Aligned        | Aligned        |
 
-## Footnotes
-
-Here's a sentence with a footnote reference. [^1]
-
-[^1]: This is the footnote content.
-
-## Definition Lists
-
-Term 1
-: Definition 1
-
-Term 2
-: Definition 2a
-: Definition 2b
-
-## Abbreviations
-
-*[HTML]: Hyper Text Markup Language
-*[CSS]: Cascading Style Sheets
-
-The HTML and CSS abbreviations will show the full meaning when hovered over.
-
-## Emoji
-
-Some basic emoji examples: 😄 🎉 👍 🐱 🚀
-
 ## Math (LaTeX)
 
 Inline math: $E = mc^2$
@@ -196,33 +170,22 @@ $$
 \frac{d}{dx}(x^n) = nx^{n-1}
 $$
 
-## Diagrams (Mermaid)
-
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
-```mermaid
-sequenceDiagram
-    participant Alice
-    participant Bob
-    Alice->>Bob: Hello Bob, how are you?
-    Bob-->>Alice: I am good thanks!
-```
-
 ## Special Characters
 
 Copyright: &copy;
+
 Registered trademark: &reg;
+
 Trademark: &trade;
+
 Euro: &euro;
+
 Left arrow: &larr;
+
 Up arrow: &uarr;
+
 Right arrow: &rarr;
+
 Down arrow: &darr;
 
 ## Escaping Characters
@@ -232,3 +195,30 @@ Down arrow: &darr;
 \# This is not a heading
 
 \- This is not a list item
+
+## Simple Component
+
+Here's a simple spinner component:
+
+::spinner{"size": 40}::
+
+## Component with Children
+
+You can also pass content to components:
+
+::custom{
+  "title": "Hello World",
+  "color": "blue"
+}
+This is the children content that will be passed to the component.
+::
+
+## Multiple Components
+
+You can have multiple components in a single document:
+
+::spinner{"size": 20}::
+
+And some more text here.
+
+::spinner{"size": 60}::

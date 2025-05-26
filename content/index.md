@@ -28,6 +28,10 @@ I've spent over a decade working as a software engineer and architect, and it's 
 
 Alongside my engineering and development work I also create digital and physical art ranging from album covers all the way to motion graphics, animations and visualizations. I've also dipped my feet into music production to round things off. After all, I'm known as the "Andrew of all trades" and try to live up to that title.
 
+## Languages
+
+::languages::
+
 ## Contact
 
 Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!

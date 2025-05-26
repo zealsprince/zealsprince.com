@@ -1,6 +1,6 @@
 <script lang="ts">
-  import NavMenu from "$components/NavMenu.svelte";
-  import Content from "$components/Content.svelte";
+  import Navigation from "$components/Navigation.svelte";
+  import Main from "$/components/Main.svelte";
   import type { PageData } from "$types/Content";
 
   export let data: PageData;
@@ -15,6 +15,6 @@
 </script>
 
 {#if !editor}
-  <NavMenu items={navItems} />
+  <Navigation items={navItems} />
 {/if}
-<Content {data} {editor} />
+<Main {data} {editor} />
