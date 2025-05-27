@@ -62,13 +62,15 @@
 
     &:before {
       content: "";
+      padding: 0.5rem;
+      width: 100%;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       display: block;
       position: absolute;
-      background: color-mix(in srgb, var(--color-background) 100%, transparent);
+      background: var(--gallery-mix-expression);
       mix-blend-mode: hue;
       transition: all 0.2s ease-in-out;
       z-index: 10;
@@ -80,8 +82,9 @@
   }
 
   .gallery-section img {
+    border-radius: var(--border-radius);
     border: 1px solid var(--color-primary);
-    padding: 0.4rem;
+    padding: var(--gallery-img-padding);
     aspect-ratio: 16 / 10;
     height: 100%;
     width: 100%;

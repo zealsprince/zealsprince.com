@@ -197,7 +197,6 @@
     background: none;
     color: var(--color-primary);
     border: none;
-    border-radius: var(--border-radius-sm);
     padding: 0rem; /* Adjusted padding for SVG */
     cursor: pointer;
     box-shadow: none;

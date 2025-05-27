@@ -36,7 +36,7 @@ void main()
     c = p * mat2(1, 1, d / (.1 + i / dot(b,b))),
 
     // Rotate into spiraling coordinates
-    v = c * mat2(cos(.5 * log( a = dot(c,c)) + u_time * i + vec4(0,33,11,0))) / i,
+    v = c * mat2(cos(.5 * log( a = dot(c,c)) + (u_time / 2.) * i + vec4(0,33,11,0))) / i,
 
     // Waves cumulative total for coloring
     w;
@@ -44,7 +44,7 @@ void main()
   //Loop through waves
   for(; i++ < u_iterations; w += 1. + sin(v) )
     //Distort coordinates
-    v += .7 * sin(v.yx * i + u_time) / i + .5 * u_offset_waves * (- vec2(.5));
+    v += .7 * sin(v.yx * i + (u_time / 2.)) / i + .5 * u_offset_waves * (- vec2(.5));
 
   //Red/blue gradient
   gl_FragColor = 1.5 - exp( -exp( c.x * vec4(u_red, u_green, u_blue, -2.))

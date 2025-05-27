@@ -18,8 +18,6 @@ links:
   - title: LinkedIn
     icon: linkedin
     url: https://www.linkedin.com/in/zealsprince/
-# gallery:
-#   - /images/mod1.jpg
 ---
 
 # A little bit of everything

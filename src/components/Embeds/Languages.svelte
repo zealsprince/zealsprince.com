@@ -77,7 +77,7 @@
     margin: 2rem 0;
     padding: 1.5rem;
     border: 1px solid var(--color-secondary);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius);
     background: color-mix(
       in srgb,
       var(--color-background) 95%,
