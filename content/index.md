@@ -26,12 +26,18 @@ I've spent over a decade working as a software engineer and architect, and it's 
 
 Alongside my engineering and development work I also create digital and physical art ranging from album covers all the way to motion graphics, animations and visualizations. I've also dipped my feet into music production to round things off. After all, I'm known as the "Andrew of all trades" and try to live up to that title.
 
-## Languages
-
-::languages::
-
 ## Contact
 
 Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
 
 Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/user-attachments/files/19816433/CV.Andrew.Lake.2025.EN.NA.Sanitized.pdf) / [German](https://github.com/user-attachments/files/19816432/CV.Andrew.Lake.2025.DE.Sanitized.pdf)
+
+## Languages
+
+::languages::
+
+## Technologies
+
+Here's a fairly exhaustive list of the technologies I work with. I try to keep up to date with the latest trends and tools, so this list is always evolving.
+
+::technologies::

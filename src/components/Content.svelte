@@ -3,6 +3,7 @@
 
   import spinner from "$components/Spinner.svelte";
   import languages from "$components/Embeds/Languages.svelte";
+  import technologies from "$/components/Embeds/Technologies.svelte";
 
   export let html: string;
   export let components: Array<{
@@ -18,6 +19,7 @@
   const componentMap = {
     spinner: () => spinner,
     languages: () => languages,
+    technologies: () => technologies,
     // Add more components as needed
   };
 
