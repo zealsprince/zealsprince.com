@@ -9,7 +9,7 @@
   // Default languages - you can override this via props
   export let languages: Language[] = [
     { name: "German", level: "native", flag: "🇩🇪" },
-    { name: "English", level: "native", flag: "🇺🇸" },
+    { name: "English", level: "native", flag: "🇨🇦" },
     { name: "French", level: "fluent", flag: "🇫🇷" },
     { name: "Dutch", level: "basic", flag: "🇳🇱" },
     { name: "Czech", level: "basic", flag: "🇨🇿" },
