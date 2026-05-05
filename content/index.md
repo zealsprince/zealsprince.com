@@ -11,7 +11,7 @@ links:
     url: mailto:andrew@zealsprince.com
   - title: CV
     icon: cv
-    url: https://github.com/user-attachments/files/19816433/CV.Andrew.Lake.2025.EN.NA.Sanitized.pdf
+    url: https://github.com/user-attachments/files/27417964/CV.Andrew.Lake.2026.EN.NA.Sanitized.pdf
   - title: GitHub
     icon: github
     url: https://github.com/zealsprince
@@ -30,7 +30,7 @@ Alongside my engineering and development work I also create digital and physical
 
 Your best bet of reaching me is by sending me an email over to [andrew@zealsprince.com](mailto:andrew@zealsprince.com)!
 
-Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/user-attachments/files/19816433/CV.Andrew.Lake.2025.EN.NA.Sanitized.pdf) / [German](https://github.com/user-attachments/files/19816432/CV.Andrew.Lake.2025.DE.Sanitized.pdf)
+Thinking of working on a project together? Looking for my CVs? You can get them here: [English](https://github.com/user-attachments/files/27417964/CV.Andrew.Lake.2026.EN.NA.Sanitized.pdf) / [German](https://github.com/user-attachments/files/27417963/CV.Andrew.Lake.2026.DE.Sanitized.pdf)
 
 ## Languages
 

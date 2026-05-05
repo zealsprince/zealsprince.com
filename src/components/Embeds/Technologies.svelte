@@ -1,90 +1,89 @@
 <script lang="ts">
-  import {
-    Code,
-    Database,
-    Globe,
-    Palette,
-    Smartphone,
-    Server,
-    Cpu,
-    Zap,
-    Monitor,
-    Settings,
-    GitBranch,
-    MessageSquare,
-  } from "@lucide/svelte";
+  import type { Component } from 'svelte'
 
   import {
-    SiGo,
-    SiPython,
-    SiTypescript,
-    SiJavascript,
-    SiSharp,
-    SiLua,
-    SiPhp,
-    SiGnubash,
-    SiCplusplus,
-    SiRust,
-    SiDart,
-    SiRuby,
-    SiVuedotjs,
-    SiReact,
-    SiNextdotjs,
-    SiVite,
-    SiNodedotjs,
-    SiElectron,
-    SiThreedotjs,
-    SiP5dotjs,
-    SiFlask,
-    SiCss3,
-    SiTailwindcss,
-    SiBootstrap,
-    SiPostgresql,
-    SiMongodb,
-    SiGraphql,
-    SiClickhouse,
-    SiElasticsearch,
-    SiAmazon,
-    SiDocker,
-    SiKubernetes,
-    SiNginx,
     SiApache,
-    SiPytorch,
-    SiTensorflow,
+    SiApachecordova,
+    SiApachekafka,
+    SiAsana,
     SiBlender,
+    SiBootstrap,
+    SiClickhouse,
+    SiCplusplus,
+    SiCss,
+    SiDart,
+    SiDatadog,
+    SiDeno,
+    SiDigitalocean,
+    SiDocker,
+    SiElasticsearch,
+    SiElectron,
+    SiFigma,
+    SiFlask,
+    SiFlutter,
+    SiFlydotio,
+    SiGithubactions,
+    SiGnubash,
+    SiGo,
+    SiGodotengine,
+    SiGooglecloud,
+    SiGrafana,
+    SiGraphql,
+    SiHuggingface,
+    SiInsomnia,
+    SiJavascript,
+    SiJira,
+    SiKubernetes,
+    SiLua,
+    SiMongodb,
+    SiNextdotjs,
+    SiNginx,
+    SiNodedotjs,
+    SiOpenapiinitiative,
+    SiP5dotjs,
+    SiPhp,
+    SiPostgresql,
+    SiPostman,
+    SiPython,
+    SiPytorch,
+    SiReact,
+    SiRedis,
+    SiRuby,
+    SiRust,
+    SiSharp,
+    SiTailwindcss,
+    SiTensorflow,
+    SiThreedotjs,
+    SiTrello,
+    SiTypescript,
     SiUnity,
     SiUnrealengine,
-    SiFigma,
-    SiFlutter,
-    SiApachecordova,
-    SiDeno,
-    SiGithubactions,
-    SiTrello,
-    SiJira,
-    SiAsana,
-    SiPostman,
-    SiInsomnia,
-    SiOpenapiinitiative,
-    SiRedis,
-    SiApachekafka,
-    SiDatadog,
-    SiGrafana,
-    SiGodotengine,
-    SiHuggingface,
-    SiDigitalocean,
-    SiFlydotio,
-    SiGooglecloud,
-  } from "@icons-pack/svelte-simple-icons";
+    SiVite,
+    SiVuedotjs,
+  } from '@icons-pack/svelte-simple-icons'
 
-  import Button from "../Button.svelte";
-  import type { Component } from "svelte";
+  import {
+    Code,
+    Cpu,
+    Database,
+    GitBranch,
+    Globe,
+    MessageSquare,
+    Monitor,
+    Palette,
+    Server,
+    Settings,
+    Smartphone,
+    Zap,
+  } from '@lucide/svelte'
+  import Button from '../Button.svelte'
 
   // Define the skill data structure
   interface Skill {
-    name: string;
-    level: "exceptional" | "outstanding" | "advanced" | "good" | "basic";
-    category: string;
-    icon?: string; // Icon key for mapping
+    name: string
+    level: 'exceptional' | 'outstanding' | 'advanced' | 'good' | 'basic'
+    category: string
+    icon?: string // Icon key for mapping
   }
 
   // Map icon names to actual Svelte components
@@ -117,7 +116,7 @@
     flask: SiFlask,
 
     // Styling
-    css: SiCss3,
+    css: SiCss,
     tailwind: SiTailwindcss,
     bootstrap: SiBootstrap,
 
@@ -138,7 +137,7 @@
     concourse: GitBranch, // Fallback to git branch icon
 
     // Hypervisors & Cloud Platforms
-    aws: SiAmazon,
+    aws: Server, // No AWS icon in simple-icons v7
     azure: Server, // Fallback to generic server icon
     gcp: SiGooglecloud,
     digitalocean: SiDigitalocean,
@@ -150,7 +149,7 @@
     openapi: SiOpenapiinitiative,
     websockets: MessageSquare, // Fallback to message icon
     kafka: SiApachekafka,
-    sqs: SiAmazon, // AWS SQS
+    sqs: Server, // AWS SQS
 
     // Project Management
     trello: SiTrello,
@@ -161,7 +160,7 @@
     // Monitoring
     datadog: SiDatadog,
     grafana: SiGrafana,
-    cloudwatch: SiAmazon, // AWS CloudWatch
+    cloudwatch: Monitor, // AWS CloudWatch
 
     // ML/AI & Creative
     pytorch: SiPytorch,
@@ -193,366 +192,370 @@
     ml: Zap,
     tools: Settings,
     monitoring: Monitor,
-  };
+  }
+
+  interface Props {
+    skills?: Skill[]
+  }
 
   // Default skills - you can override this via props
-  export let skills: Skill[] = [
+  const { skills = [
     // Programming Languages - Exceptional/Outstanding
-    { name: "Go", level: "exceptional", category: "Languages", icon: "go" },
+    { name: 'Go', level: 'exceptional', category: 'Languages', icon: 'go' },
     {
-      name: "Python",
-      level: "exceptional",
-      category: "Languages",
-      icon: "python",
+      name: 'Python',
+      level: 'exceptional',
+      category: 'Languages',
+      icon: 'python',
     },
     {
-      name: "TypeScript",
-      level: "exceptional",
-      category: "Languages",
-      icon: "typescript",
+      name: 'TypeScript',
+      level: 'exceptional',
+      category: 'Languages',
+      icon: 'typescript',
     },
     {
-      name: "JavaScript",
-      level: "exceptional",
-      category: "Languages",
-      icon: "javascript",
+      name: 'JavaScript',
+      level: 'exceptional',
+      category: 'Languages',
+      icon: 'javascript',
     },
-    { name: "C#", level: "exceptional", category: "Languages", icon: "csharp" },
-    { name: "Java", level: "outstanding", category: "Languages", icon: "java" },
-    { name: "Lua", level: "exceptional", category: "Languages", icon: "lua" },
-    { name: "PHP", level: "exceptional", category: "Languages", icon: "php" },
+    { name: 'C#', level: 'exceptional', category: 'Languages', icon: 'csharp' },
+    { name: 'Java', level: 'outstanding', category: 'Languages', icon: 'java' },
+    { name: 'Lua', level: 'exceptional', category: 'Languages', icon: 'lua' },
+    { name: 'PHP', level: 'exceptional', category: 'Languages', icon: 'php' },
     {
-      name: "Bash/Zsh",
-      level: "exceptional",
-      category: "Languages",
-      icon: "bash",
+      name: 'Bash/Zsh',
+      level: 'exceptional',
+      category: 'Languages',
+      icon: 'bash',
     },
-    { name: "Deno", level: "outstanding", category: "Languages", icon: "deno" },
+    { name: 'Deno', level: 'outstanding', category: 'Languages', icon: 'deno' },
 
     // Programming Languages - Advanced
     {
-      name: "C++",
-      level: "outstanding",
-      category: "Languages",
-      icon: "cplusplus",
+      name: 'C++',
+      level: 'outstanding',
+      category: 'Languages',
+      icon: 'cplusplus',
     },
-    { name: "Rust", level: "advanced", category: "Languages", icon: "rust" },
-    { name: "Dart", level: "advanced", category: "Languages", icon: "dart" },
-    { name: "Ruby", level: "advanced", category: "Languages", icon: "ruby" },
+    { name: 'Rust', level: 'advanced', category: 'Languages', icon: 'rust' },
+    { name: 'Dart', level: 'advanced', category: 'Languages', icon: 'dart' },
+    { name: 'Ruby', level: 'advanced', category: 'Languages', icon: 'ruby' },
     {
-      name: "Crystal",
-      level: "advanced",
-      category: "Languages",
-      icon: "default",
+      name: 'Crystal',
+      level: 'advanced',
+      category: 'Languages',
+      icon: 'default',
     },
-    { name: "Elm", level: "advanced", category: "Languages", icon: "default" },
-    { name: "Haxe", level: "advanced", category: "Languages", icon: "default" },
+    { name: 'Elm', level: 'advanced', category: 'Languages', icon: 'default' },
+    { name: 'Haxe', level: 'advanced', category: 'Languages', icon: 'default' },
 
     // Web Technologies
-    { name: "Vue.js", level: "exceptional", category: "Web", icon: "vue" },
-    { name: "React", level: "exceptional", category: "Web", icon: "react" },
-    { name: "Next.js", level: "exceptional", category: "Web", icon: "nextjs" },
-    { name: "Node.js", level: "exceptional", category: "Web", icon: "nodejs" },
+    { name: 'Vue.js', level: 'exceptional', category: 'Web', icon: 'vue' },
+    { name: 'React', level: 'exceptional', category: 'Web', icon: 'react' },
+    { name: 'Next.js', level: 'exceptional', category: 'Web', icon: 'nextjs' },
+    { name: 'Node.js', level: 'exceptional', category: 'Web', icon: 'nodejs' },
 
     {
-      name: "Electron",
-      level: "advanced",
-      category: "Web",
-      icon: "electron",
+      name: 'Electron',
+      level: 'advanced',
+      category: 'Web',
+      icon: 'electron',
     },
-    { name: "Three.js", level: "advanced", category: "Web", icon: "threejs" },
-    { name: "p5.js", level: "outstanding", category: "Web", icon: "p5js" },
-    { name: "Flask", level: "exceptional", category: "Web", icon: "flask" },
-    { name: "Sanic", level: "outstanding", category: "Web", icon: "python" },
+    { name: 'Three.js', level: 'advanced', category: 'Web', icon: 'threejs' },
+    { name: 'p5.js', level: 'outstanding', category: 'Web', icon: 'p5js' },
+    { name: 'Flask', level: 'exceptional', category: 'Web', icon: 'flask' },
+    { name: 'Sanic', level: 'outstanding', category: 'Web', icon: 'python' },
 
     // Styling & CSS
     {
-      name: "CSS/SCSS",
-      level: "exceptional",
-      category: "Styling",
-      icon: "css",
+      name: 'CSS/SCSS',
+      level: 'exceptional',
+      category: 'Styling',
+      icon: 'css',
     },
     {
-      name: "Tailwind",
-      level: "exceptional",
-      category: "Styling",
-      icon: "tailwind",
+      name: 'Tailwind',
+      level: 'exceptional',
+      category: 'Styling',
+      icon: 'tailwind',
     },
     {
-      name: "Bootstrap",
-      level: "good",
-      category: "Styling",
-      icon: "bootstrap",
+      name: 'Bootstrap',
+      level: 'good',
+      category: 'Styling',
+      icon: 'bootstrap',
     },
 
     // Databases
     {
-      name: "PostgreSQL",
-      level: "exceptional",
-      category: "Database",
-      icon: "postgresql",
+      name: 'PostgreSQL',
+      level: 'exceptional',
+      category: 'Database',
+      icon: 'postgresql',
     },
     {
-      name: "MongoDB",
-      level: "outstanding",
-      category: "Database",
-      icon: "mongodb",
+      name: 'MongoDB',
+      level: 'outstanding',
+      category: 'Database',
+      icon: 'mongodb',
     },
     {
-      name: "GraphQL",
-      level: "outstanding",
-      category: "Database",
-      icon: "graphql",
+      name: 'GraphQL',
+      level: 'outstanding',
+      category: 'Database',
+      icon: 'graphql',
     },
     {
-      name: "ClickHouse",
-      level: "exceptional",
-      category: "Database",
-      icon: "clickhouse",
+      name: 'ClickHouse',
+      level: 'exceptional',
+      category: 'Database',
+      icon: 'clickhouse',
     },
     {
-      name: "ElasticSearch",
-      level: "good",
-      category: "Database",
-      icon: "elasticsearch",
+      name: 'ElasticSearch',
+      level: 'good',
+      category: 'Database',
+      icon: 'elasticsearch',
     },
-    { name: "ChromaDB", level: "good", category: "Database", icon: "database" },
+    { name: 'ChromaDB', level: 'good', category: 'Database', icon: 'database' },
     {
-      name: "AWS RDS",
-      level: "outstanding",
-      category: "Database",
-      icon: "aws",
+      name: 'AWS RDS',
+      level: 'outstanding',
+      category: 'Database',
+      icon: 'aws',
     },
     {
-      name: "Redis",
-      level: "outstanding",
-      category: "Database",
-      icon: "redis",
+      name: 'Redis',
+      level: 'outstanding',
+      category: 'Database',
+      icon: 'redis',
     },
 
     // DevOps & Infrastructure
     {
-      name: "Docker",
-      level: "exceptional",
-      category: "DevOps",
-      icon: "docker",
+      name: 'Docker',
+      level: 'exceptional',
+      category: 'DevOps',
+      icon: 'docker',
     },
     {
-      name: "Kubernetes",
-      level: "outstanding",
-      category: "DevOps",
-      icon: "kubernetes",
+      name: 'Kubernetes',
+      level: 'outstanding',
+      category: 'DevOps',
+      icon: 'kubernetes',
     },
-    { name: "Nginx", level: "outstanding", category: "DevOps", icon: "nginx" },
-    { name: "Apache", level: "good", category: "DevOps", icon: "apache" },
+    { name: 'Nginx', level: 'outstanding', category: 'DevOps', icon: 'nginx' },
+    { name: 'Apache', level: 'good', category: 'DevOps', icon: 'apache' },
     {
-      name: "GitHub Actions",
-      level: "exceptional",
-      category: "DevOps",
-      icon: "githubactions",
+      name: 'GitHub Actions',
+      level: 'exceptional',
+      category: 'DevOps',
+      icon: 'githubactions',
     },
     {
-      name: "Concourse CI",
-      level: "outstanding",
-      category: "DevOps",
-      icon: "concourse",
+      name: 'Concourse CI',
+      level: 'outstanding',
+      category: 'DevOps',
+      icon: 'concourse',
     },
 
     // Hypervisors & Cloud Platforms
-    { name: "AWS", level: "exceptional", category: "Hypervisors", icon: "aws" },
+    { name: 'AWS', level: 'exceptional', category: 'Hypervisors', icon: 'aws' },
     {
-      name: "Fly.io",
-      level: "exceptional",
-      category: "Hypervisors",
-      icon: "flyio",
+      name: 'Fly.io',
+      level: 'exceptional',
+      category: 'Hypervisors',
+      icon: 'flyio',
     },
     {
-      name: "DigitalOcean",
-      level: "exceptional",
-      category: "Hypervisors",
-      icon: "digitalocean",
+      name: 'DigitalOcean',
+      level: 'exceptional',
+      category: 'Hypervisors',
+      icon: 'digitalocean',
     },
     {
-      name: "Azure",
-      level: "advanced",
-      category: "Hypervisors",
-      icon: "azure",
+      name: 'Azure',
+      level: 'advanced',
+      category: 'Hypervisors',
+      icon: 'azure',
     },
-    { name: "GCP", level: "good", category: "Hypervisors", icon: "gcp" },
+    { name: 'GCP', level: 'good', category: 'Hypervisors', icon: 'gcp' },
 
     // Tools & APIs
     {
-      name: "Postman",
-      level: "outstanding",
-      category: "Tools",
-      icon: "postman",
+      name: 'Postman',
+      level: 'outstanding',
+      category: 'Tools',
+      icon: 'postman',
     },
     {
-      name: "Insomnia",
-      level: "outstanding",
-      category: "Tools",
-      icon: "insomnia",
+      name: 'Insomnia',
+      level: 'outstanding',
+      category: 'Tools',
+      icon: 'insomnia',
     },
     {
-      name: "OpenAPI",
-      level: "outstanding",
-      category: "Tools",
-      icon: "openapi",
+      name: 'OpenAPI',
+      level: 'outstanding',
+      category: 'Tools',
+      icon: 'openapi',
     },
     {
-      name: "WebSockets",
-      level: "outstanding",
-      category: "Tools",
-      icon: "websockets",
+      name: 'WebSockets',
+      level: 'outstanding',
+      category: 'Tools',
+      icon: 'websockets',
     },
-    { name: "Kafka", level: "advanced", category: "Tools", icon: "kafka" },
-    { name: "AWS SQS", level: "good", category: "Tools", icon: "sqs" },
+    { name: 'Kafka', level: 'advanced', category: 'Tools', icon: 'kafka' },
+    { name: 'AWS SQS', level: 'good', category: 'Tools', icon: 'sqs' },
 
     // Project Management
     {
-      name: "Trello",
-      level: "exceptional",
-      category: "Management",
-      icon: "trello",
+      name: 'Trello',
+      level: 'exceptional',
+      category: 'Management',
+      icon: 'trello',
     },
     {
-      name: "Jira",
-      level: "exceptional",
-      category: "Management",
-      icon: "jira",
+      name: 'Jira',
+      level: 'exceptional',
+      category: 'Management',
+      icon: 'jira',
     },
     {
-      name: "Asana",
-      level: "outstanding",
-      category: "Management",
-      icon: "asana",
+      name: 'Asana',
+      level: 'outstanding',
+      category: 'Management',
+      icon: 'asana',
     },
     {
-      name: "YouTrack",
-      level: "exceptional",
-      category: "Management",
-      icon: "youtrack",
+      name: 'YouTrack',
+      level: 'exceptional',
+      category: 'Management',
+      icon: 'youtrack',
     },
 
     // Monitoring
     {
-      name: "Grafana",
-      level: "exceptional",
-      category: "Monitoring",
-      icon: "grafana",
+      name: 'Grafana',
+      level: 'exceptional',
+      category: 'Monitoring',
+      icon: 'grafana',
     },
     {
-      name: "DataDog",
-      level: "outstanding",
-      category: "Monitoring",
-      icon: "datadog",
+      name: 'DataDog',
+      level: 'outstanding',
+      category: 'Monitoring',
+      icon: 'datadog',
     },
     {
-      name: "CloudWatch",
-      level: "outstanding",
-      category: "Monitoring",
-      icon: "cloudwatch",
+      name: 'CloudWatch',
+      level: 'outstanding',
+      category: 'Monitoring',
+      icon: 'cloudwatch',
     },
 
     // Creative & ML
     {
-      name: "PyTorch",
-      level: "good",
-      category: "ML/AI",
-      icon: "pytorch",
+      name: 'PyTorch',
+      level: 'good',
+      category: 'ML/AI',
+      icon: 'pytorch',
     },
     {
-      name: "TensorFlow",
-      level: "good",
-      category: "ML/AI",
-      icon: "tensorflow",
+      name: 'TensorFlow',
+      level: 'good',
+      category: 'ML/AI',
+      icon: 'tensorflow',
     },
     {
-      name: "Diffusers",
-      level: "advanced",
-      category: "ML/AI",
-      icon: "diffusers",
+      name: 'Diffusers',
+      level: 'advanced',
+      category: 'ML/AI',
+      icon: 'diffusers',
     },
     {
-      name: "Transformers",
-      level: "advanced",
-      category: "ML/AI",
-      icon: "transformers",
+      name: 'Transformers',
+      level: 'advanced',
+      category: 'ML/AI',
+      icon: 'transformers',
     },
     {
-      name: "Blender",
-      level: "exceptional",
-      category: "Creative",
-      icon: "blender",
+      name: 'Blender',
+      level: 'exceptional',
+      category: 'Creative',
+      icon: 'blender',
     },
     {
-      name: "Unity",
-      level: "exceptional",
-      category: "Creative",
-      icon: "unity",
+      name: 'Unity',
+      level: 'exceptional',
+      category: 'Creative',
+      icon: 'unity',
     },
     {
-      name: "Unreal Engine",
-      level: "good",
-      category: "Creative",
-      icon: "unreal",
+      name: 'Unreal Engine',
+      level: 'good',
+      category: 'Creative',
+      icon: 'unreal',
     },
     {
-      name: "Godot",
-      level: "advanced",
-      category: "Creative",
-      icon: "godot",
+      name: 'Godot',
+      level: 'advanced',
+      category: 'Creative',
+      icon: 'godot',
     },
     {
-      name: "LOVE2D",
-      level: "outstanding",
-      category: "Creative",
-      icon: "love2d",
+      name: 'LOVE2D',
+      level: 'outstanding',
+      category: 'Creative',
+      icon: 'love2d',
     },
     {
-      name: "Adobe CC",
-      level: "exceptional",
-      category: "Creative",
-      icon: "adobe",
+      name: 'Adobe CC',
+      level: 'exceptional',
+      category: 'Creative',
+      icon: 'adobe',
     },
-    { name: "Figma", level: "advanced", category: "Creative", icon: "figma" },
+    { name: 'Figma', level: 'advanced', category: 'Creative', icon: 'figma' },
 
     // Mobile
     {
-      name: "Flutter",
-      level: "outstanding",
-      category: "Mobile",
-      icon: "flutter",
+      name: 'Flutter',
+      level: 'outstanding',
+      category: 'Mobile',
+      icon: 'flutter',
     },
-    { name: "Cordova", level: "advanced", category: "Mobile", icon: "cordova" },
-  ];
+    { name: 'Cordova', level: 'advanced', category: 'Mobile', icon: 'cordova' },
+  ] }: Props = $props()
 
   // Color mapping for proficiency levels
   const levelColors = {
-    exceptional: "var(--color-primary)",
-    outstanding: "#2563eb",
-    advanced: "#059669",
-    good: "#d97706",
-    basic: "#dc2626",
-  };
+    exceptional: 'var(--color-primary)',
+    outstanding: '#2563eb',
+    advanced: '#059669',
+    good: '#d97706',
+    basic: '#dc2626',
+  }
 
   // Width mapping for visual bars
   const levelWidths = {
-    exceptional: "100%",
-    outstanding: "90%",
-    advanced: "75%",
-    good: "60%",
-    basic: "40%",
-  };
+    exceptional: '100%',
+    outstanding: '90%',
+    advanced: '75%',
+    good: '60%',
+    basic: '40%',
+  }
 
   // Level display names
   const levelNames = {
-    exceptional: "Exceptional",
-    outstanding: "Outstanding",
-    advanced: "Advanced",
-    good: "Good",
-    basic: "Basic",
-  };
+    exceptional: 'Exceptional',
+    outstanding: 'Outstanding',
+    advanced: 'Advanced',
+    good: 'Good',
+    basic: 'Basic',
+  }
 
   // Level priority for sorting (higher number = higher skill)
   const levelPriority = {
@@ -561,84 +564,84 @@
     advanced: 3,
     good: 2,
     basic: 1,
-  };
+  }
 
-  // Group and sort skills by category
-  $: groupedSkills = skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) {
-        acc[skill.category] = [];
-      }
-      acc[skill.category].push(skill);
-      return acc;
-    },
-    {} as Record<string, Skill[]>,
-  );
+  // Group and sort skills by category in a single derived
+  const groupedSkills = $derived(
+    skills.reduce(
+      (acc, skill) => {
+        if (!acc[skill.category]) {
+          acc[skill.category] = []
+        }
+        acc[skill.category].push(skill)
+        return acc
+      },
+      {} as Record<string, Skill[]>,
+    ),
+  )
 
-  // Sort skills within each category by level (highest first)
-  $: Object.keys(groupedSkills).forEach((category) => {
-    groupedSkills[category].sort(
-      (a, b) => levelPriority[b.level] - levelPriority[a.level],
-    );
-  });
+  const sortedGroupedSkills = $derived(
+    Object.fromEntries(
+      Object.entries(groupedSkills).map(([cat, catSkills]) => [
+        cat,
+        [...catSkills].sort((a, b) => levelPriority[b.level] - levelPriority[a.level]),
+      ]),
+    ),
+  )
 
   // Category order for consistent display
   const categoryOrder = [
-    "Languages",
-    "Web",
-    "Styling",
-    "Database",
-    "DevOps",
-    "Hypervisors",
-    "Tools",
-    "Management",
-    "Monitoring",
-    "ML/AI",
-    "Creative",
-    "Mobile",
-  ];
+    'Languages',
+    'Web',
+    'Styling',
+    'Database',
+    'DevOps',
+    'Hypervisors',
+    'Tools',
+    'Management',
+    'Monitoring',
+    'ML/AI',
+    'Creative',
+    'Mobile',
+  ]
 
-  $: orderedCategories = categoryOrder.filter(
-    (cat) => groupedSkills[cat]?.length > 0,
-  );
+  const orderedCategories = $derived(
+    categoryOrder.filter(cat => sortedGroupedSkills[cat]?.length > 0),
+  )
 
   // Track expanded state for each category
-  let expandedCategories: Record<string, boolean> = {};
+  const expandedCategories: Record<string, boolean> = $state({})
 
-  // Toggle expand/collapse for a category
   function toggleCategory(category: string) {
-    expandedCategories[category] = !expandedCategories[category];
-    expandedCategories = { ...expandedCategories }; // Trigger reactivity
+    expandedCategories[category] = !expandedCategories[category]
   }
 
   // Get visible skills for a category (first 3 or all if expanded)
   function getVisibleSkills(category: string) {
-    const skills = groupedSkills[category] || [];
-    const isExpanded = expandedCategories[category];
-    return isExpanded ? skills : skills.slice(0, 3);
+    const catSkills = sortedGroupedSkills[category] || []
+    const isExpanded = expandedCategories[category]
+    return isExpanded ? catSkills : catSkills.slice(0, 3)
   }
 
   // Check if category has more than 3 items
   function hasMoreItems(category: string) {
-    return (groupedSkills[category] || []).length > 3;
+    return (sortedGroupedSkills[category] || []).length > 3
   }
 </script>
 
 <div class="programming-container">
   <div class="categories-grid">
-    {#each orderedCategories as category}
+    {#each orderedCategories as category (category)}
       <div class="category-section">
         <h3 class="category-title">{category}</h3>
         <div class="skills-list">
-          {#each getVisibleSkills(category) as skill}
+          {#each getVisibleSkills(category) as skill (skill.name)}
             <div class="skill-item">
               <div class="skill-header">
                 {#if skill.icon}
+                  {@const IconComponent = iconMap[skill.icon] || iconMap.default}
                   <span class="skill-icon">
-                    <svelte:component
-                      this={iconMap[skill.icon] || iconMap.default}
-                      size={16}
-                    />
+                    <IconComponent size={16} />
                   </span>
                 {/if}
                 <span class="skill-name">{skill.name}</span>
@@ -665,10 +668,10 @@
             variant="ghost"
             size="sm"
             fullWidth
-            on:click={() => toggleCategory(category)}
+            onclick={() => toggleCategory(category)}
           >
             {expandedCategories[category]
-              ? "Show Less"
+              ? 'Show Less'
               : `Show All (${groupedSkills[category].length})`}
           </Button>
         {/if}

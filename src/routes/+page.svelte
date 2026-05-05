@@ -1,17 +1,16 @@
 <script lang="ts">
-  import Navigation from "$components/Navigation.svelte";
-  import Main from "$/components/Main.svelte";
-  import type { PageData } from "$types/Content";
+  import type { PageData } from '$types/Content'
+  import Main from '$/components/Main.svelte'
+  import { browser } from '$app/environment'
+  import { page } from '$app/state'
+  import Navigation from '$components/Navigation.svelte'
 
-  export let data: PageData;
-  let navItems = data?.navItems ?? [];
-
-  import { page } from "$app/state";
-  import { browser } from "$app/environment";
+  const { data }: { data: PageData } = $props()
+  const navItems = $derived(data?.navItems ?? [])
 
   const editor = browser
-    ? page.url.searchParams.get("editor") === "true"
-    : false;
+    ? page.url.searchParams.get('editor') === 'true'
+    : false
 </script>
 
 {#if !editor}

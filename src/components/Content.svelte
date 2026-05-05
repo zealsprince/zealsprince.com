@@ -1,19 +1,23 @@
 <script lang="ts">
-  import { onMount, mount } from "svelte";
+  import technologies from '$/components/Embeds/Technologies.svelte'
 
-  import spinner from "$components/Spinner.svelte";
-  import languages from "$components/Embeds/Languages.svelte";
-  import technologies from "$/components/Embeds/Technologies.svelte";
+  import languages from '$components/Embeds/Languages.svelte'
+  import spinner from '$components/Spinner.svelte'
+  import { mount, onMount } from 'svelte'
 
-  export let html: string;
-  export let components: Array<{
-    name: string;
-    props: Record<string, any>;
-    id: string;
-  }> = [];
+  interface Props {
+    html: string
+    components?: Array<{
+      name: string
+      props: Record<string, any>
+      id: string
+    }>
+  }
 
-  let container: HTMLDivElement;
-  let loadedComponents: Record<string, any> = {};
+  const { html, components = [] }: Props = $props()
+
+  let container: HTMLDivElement | undefined = $state()
+  const loadedComponents: Record<string, any> = {}
 
   // Component registry - you can extend this
   const componentMap = {
@@ -21,66 +25,74 @@
     languages: () => languages,
     technologies: () => technologies,
     // Add more components as needed
-  };
+  }
 
   async function loadComponent(name: string) {
-    if (loadedComponents[name]) return loadedComponents[name];
+    if (loadedComponents[name])
+      return loadedComponents[name]
 
     try {
-      const module = await componentMap[name as keyof typeof componentMap]?.();
+      const module = await componentMap[name as keyof typeof componentMap]?.()
       if (module) {
-        loadedComponents[name] = module;
-        return module;
+        loadedComponents[name] = module
+        return module
       }
-    } catch (e) {
-      console.warn(`Failed to load component: ${name}`, e);
     }
-    return null;
+    catch (e) {
+      console.warn(`Failed to load component: ${name}`, e)
+    }
+    return null
   }
 
   async function renderComponents() {
-    if (!container || !components.length) return;
+    if (!container || !components.length)
+      return
 
     for (const component of components) {
       const placeholder = container.querySelector(
         `[data-component-id="${component.id}"]`,
-      );
-      if (!placeholder) continue;
+      )
+      if (!placeholder)
+        continue
 
-      const ComponentClass = await loadComponent(component.name);
-      if (!ComponentClass) continue;
+      const ComponentClass = await loadComponent(component.name)
+      if (!ComponentClass)
+        continue
 
       try {
         // Create a wrapper div for the component
-        const wrapper = document.createElement("div");
-        wrapper.className = "dynamic-component";
+        const wrapper = document.createElement('div')
+        wrapper.className = 'dynamic-component'
 
         // Create the Svelte component instance using Svelte 5 mount API
         mount(ComponentClass, {
           target: wrapper,
           props: component.props,
-        });
+        })
 
         // Replace the placeholder with the component
-        placeholder.replaceWith(wrapper);
-      } catch (e) {
-        console.error(`Failed to render component ${component.name}:`, e);
-        placeholder.innerHTML = `<div class="component-error">Failed to load component: ${component.name}</div>`;
+        placeholder.replaceWith(wrapper)
+      }
+      catch (e) {
+        console.error(`Failed to render component ${component.name}:`, e)
+        placeholder.innerHTML = `<div class="component-error">Failed to load component: ${component.name}</div>`
       }
     }
   }
 
   onMount(() => {
-    renderComponents();
-  });
+    renderComponents()
+  })
 
   // Re-render when components change
-  $: if (container && components) {
-    renderComponents();
-  }
+  $effect(() => {
+    if (container && components)
+      renderComponents()
+  })
 </script>
 
 <div bind:this={container} class="dynamic-content">
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
   {@html html}
 </div>
 

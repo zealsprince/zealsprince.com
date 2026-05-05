@@ -1,94 +1,96 @@
 <script lang="ts">
-  import type { SceneProps } from "$/types/Scene";
-  import { T } from "@threlte/core";
-  import { useThrelte, useTask } from "@threlte/core";
-  import { onMount } from "svelte";
+  import type { SceneProps } from '$/types/Scene'
+  import { T, useTask, useThrelte } from '@threlte/core'
+  import { onMount } from 'svelte'
 
-  export let props: SceneProps;
+  interface Props {
+    props: SceneProps
+  }
 
-  const { size } = useThrelte();
+  const { props }: Props = $props()
 
-  let cubeRotation = 0;
+  const { size } = useThrelte()
 
-  let mouseInfluence = 4;
-  let smoothMouseX = 0;
-  let smoothMouseY = 0;
-  let velocityX = 0;
-  let velocityY = 0;
-  const friction = 0.9; // Higher values (closer to 1) mean less friction
-  const acceleration = 0.01; // How quickly to accelerate toward the target
+  let cubeRotation = $state(0)
+
+  const mouseInfluence = 4
+  let smoothMouseX = $state(0)
+  let smoothMouseY = $state(0)
+  let velocityX = $state(0)
+  let velocityY = $state(0)
+  const friction = 0.9
+  const acceleration = 0.01
+
+  type Cube = {
+    position: [number, number, number]
+    color: string
+    size: number
+    wireframe: boolean
+  }
+
+  let cubes: Cube[] = $state([])
+
+  function randomBetween(a: number, b: number) {
+    return Math.random() * (b - a) + a
+  }
 
   function initalizeScene() {
-    const numCubes = 48;
+    const numCubes = 48
     cubes = Array.from({ length: numCubes }, () => ({
       position: [
         randomBetween(-6, 6),
         randomBetween(-8, 8),
         randomBetween(-4, -16),
       ],
-      color: "#212429",
+      color: '#212429',
       size: randomBetween(0.25, 1.5),
-      wireframe: Math.random() > 0.5, // Randomly determine if wireframe or solid
-    }));
+      wireframe: Math.random() > 0.5,
+    }))
   }
 
-  // Create an animation task using Threlte's scheduler
-  const { start } = useTask("cube-animation", (delta) => {
-    if (props.editor) return;
+  const { start } = useTask('cube-animation', (delta) => {
+    if (props.editor)
+      return
 
-    // Calculate distance between current and target position
-    const distanceX = props.mouseX - smoothMouseX;
-    const distanceY = props.mouseY - smoothMouseY;
+    const distanceX = props.mouseX - smoothMouseX
+    const distanceY = props.mouseY - smoothMouseY
 
-    // Add acceleration to velocity based on distance
-    velocityX += distanceX * acceleration;
-    velocityY += distanceY * acceleration;
+    velocityX += distanceX * acceleration
+    velocityY += distanceY * acceleration
 
-    // Apply friction to slow down movement
-    velocityX *= friction;
-    velocityY *= friction;
+    velocityX *= friction
+    velocityY *= friction
 
-    // Update position with velocity
-    smoothMouseX += velocityX;
-    smoothMouseY += velocityY;
+    smoothMouseX += velocityX
+    smoothMouseY += velocityY
 
-    // Use delta time to make rotation frame-rate independent
-    cubeRotation += 0.05 * delta;
-  });
+    cubeRotation += 0.05 * delta
+  })
 
   onMount(() => {
-    if (typeof window !== "undefined") {
-      initalizeScene();
-      start();
+    if (typeof window !== 'undefined') {
+      initalizeScene()
+      start()
     }
-  });
+  })
 
-  $: cameraX = props.editor
-    ? 0
-    : smoothMouseX / $size.width - 0.5 * mouseInfluence;
+  const cameraX = $derived(
+    props.editor
+      ? 0
+      : smoothMouseX / $size.width - 0.5 * mouseInfluence,
+  )
 
-  $: cameraMouseOffsetY = props.editor
-    ? 0
-    : smoothMouseY / $size.height - 0.5 * mouseInfluence;
+  const cameraMouseOffsetY = $derived(
+    props.editor
+      ? 0
+      : smoothMouseY / $size.height - 0.5 * mouseInfluence,
+  )
 
-  // When in editor mode, Y is fixed. Otherwise, it combines scroll and mouse.
-  $: finalCameraY = props.editor
-    ? 1
-    : 1 + props.scrollY / 500 + cameraMouseOffsetY;
-
-  // Generate random cubes on mount
-  type Cube = {
-    position: [number, number, number];
-    color: string;
-    size: number;
-    wireframe: boolean;
-  };
-
-  let cubes: Cube[] = [];
-
-  function randomBetween(a: number, b: number) {
-    return Math.random() * (b - a) + a;
-  }
+  const finalCameraY = $derived(
+    props.editor
+      ? 1
+      : 1 + props.scrollY / 500 + cameraMouseOffsetY,
+  )
 </script>
 
 <T.PerspectiveCamera
@@ -101,7 +103,7 @@
 />
 
 <T.Scene position={[0, 0, 0]}>
-  {#each cubes as cube, i}
+  {#each cubes as cube, i (i)}
     <T.Mesh
       position={cube.position}
       rotation={[0, i + cubeRotation * (i / 10), i + cubeRotation * (i / 10)]}

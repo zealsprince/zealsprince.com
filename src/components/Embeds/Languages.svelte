@@ -1,51 +1,55 @@
 <script lang="ts">
   // Define the language data structure
   interface Language {
-    name: string;
-    level: "native" | "fluent" | "advanced" | "intermediate" | "basic";
-    flag?: string; // Optional emoji flag
+    name: string
+    level: 'native' | 'fluent' | 'advanced' | 'intermediate' | 'basic'
+    flag?: string // Optional emoji flag
+  }
+
+  interface Props {
+    languages?: Language[]
   }
 
   // Default languages - you can override this via props
-  export let languages: Language[] = [
-    { name: "German", level: "native", flag: "🇩🇪" },
-    { name: "English", level: "native", flag: "🇨🇦" },
-    { name: "French", level: "fluent", flag: "🇫🇷" },
-    { name: "Dutch", level: "basic", flag: "🇳🇱" },
-    { name: "Czech", level: "basic", flag: "🇨🇿" },
-  ];
+  const { languages = [
+    { name: 'German', level: 'native', flag: '🇩🇪' },
+    { name: 'English', level: 'native', flag: '🇨🇦' },
+    { name: 'French', level: 'fluent', flag: '🇫🇷' },
+    { name: 'Dutch', level: 'basic', flag: '🇳🇱' },
+    { name: 'Czech', level: 'basic', flag: '🇨🇿' },
+  ] }: Props = $props()
 
   // Color mapping for proficiency levels
   const levelColors = {
-    native: "var(--color-primary)",
-    fluent: "#2563eb",
-    advanced: "#059669",
-    intermediate: "#d97706",
-    basic: "#dc2626",
-  };
+    native: 'var(--color-primary)',
+    fluent: '#2563eb',
+    advanced: '#059669',
+    intermediate: '#d97706',
+    basic: '#dc2626',
+  }
 
   // Width mapping for visual bars
   const levelWidths = {
-    native: "100%",
-    fluent: "85%",
-    advanced: "70%",
-    intermediate: "55%",
-    basic: "40%",
-  };
+    native: '100%',
+    fluent: '85%',
+    advanced: '70%',
+    intermediate: '55%',
+    basic: '40%',
+  }
 
   // Level display names
   const levelNames = {
-    native: "Native",
-    fluent: "Fluent",
-    advanced: "Advanced",
-    intermediate: "Intermediate",
-    basic: "Basic",
-  };
+    native: 'Native',
+    fluent: 'Fluent',
+    advanced: 'Advanced',
+    intermediate: 'Intermediate',
+    basic: 'Basic',
+  }
 </script>
 
 <div class="languages-container">
   <div class="languages-grid">
-    {#each languages as language}
+    {#each languages as language (language.name)}
       <div class="language-item">
         <div class="language-header">
           {#if language.flag}

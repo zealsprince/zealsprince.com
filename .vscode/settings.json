@@ -23,5 +23,5 @@
     "typescript"
   ],
   // Use the local version of TypeScript
-  "typescript.tsdk": "./node_modules/typescript/lib",
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }

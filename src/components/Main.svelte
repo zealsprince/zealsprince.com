@@ -1,90 +1,96 @@
 <script lang="ts">
-  import Gallery from "./Gallery.svelte";
-  import Threalte from "./Threlte.svelte";
-  import Content from "./Content.svelte";
-  import { fly } from "svelte/transition";
-  import { onMount } from "svelte";
-  import Links from "./Links.svelte";
-  import type { RawLink, GallerySection, Frontmatter } from "$types/Content";
-  import { base } from "$app/paths";
-  import { SceneName } from "$/types/Scene";
+  import type { Frontmatter, GallerySection, RawLink } from '$types/Content'
+  import { SceneName } from '$/types/Scene'
+  import { base } from '$app/paths'
+  import { onMount } from 'svelte'
+  import { fly } from 'svelte/transition'
+  import Content from './Content.svelte'
+  import Gallery from './Gallery.svelte'
+  import Links from './Links.svelte'
+  import Threalte from './Threlte.svelte'
 
-  export let data: {
-    html: string;
-    gallery: GallerySection[];
-    frontmatter: Frontmatter;
-    scene: string | null;
-    links: RawLink[];
-    components?: Array<{
-      name: string;
-      props: Record<string, any>;
-      id: string;
-    }>;
-  };
-  export let editor: boolean = false; // New prop to control editor mode
+  interface Props {
+    data: {
+      html: string
+      gallery: GallerySection[]
+      frontmatter: Frontmatter
+      scene: string | null
+      links: RawLink[]
+      components?: Array<{
+        name: string
+        props: Record<string, any>
+        id: string
+      }>
+    }
+    editor?: boolean
+  }
+
+  const { data, editor = false }: Props = $props()
 
   // Variables for non-editor mode
-  let content = "";
+  let content = $state('')
   let components: Array<{
-    name: string;
-    props: Record<string, any>;
-    id: string;
-  }> = [];
-  let gallery: GallerySection[] = [];
-  let styleClass = "";
-  let customStyle = "";
-  let minifyHeader: boolean = false;
-  let contentBody: HTMLElement; // Reference to the content body element
+    name: string
+    props: Record<string, any>
+    id: string
+  }> = $state([])
+  let gallery: GallerySection[] = $state([])
+  let styleClass = $state('')
+  let customStyle = $state('')
+  let minifyHeader: boolean = $state(false)
+  let contentBody: HTMLElement | undefined = $state() // Reference to the content body element
 
   // Scene is used in both modes
-  let scene: SceneName = (data.scene as SceneName) ?? SceneName.SceneIndex;
+  const scene: SceneName = $derived((data.scene as SceneName) ?? SceneName.SceneIndex)
 
-  $: {
-    styleClass = data.frontmatter?.style ? `${data.frontmatter.style}` : "";
+  $effect(() => {
+    styleClass = data.frontmatter?.style ? `${data.frontmatter.style}` : ''
 
     customStyle = data.frontmatter?.style
       ? `${base}/styles/content/${data.frontmatter.style}.css`
-      : "";
+      : ''
 
     if (!editor) {
-      content = data.html || "";
-      components = data.components || [];
-      gallery = data.gallery || [];
-    } else {
-      // Reset or set defaults for editor mode if necessary
-      content = "";
-      components = [];
-      gallery = [];
+      content = data.html || ''
+      components = data.components || []
+      gallery = data.gallery || []
     }
-  }
+    else {
+      content = ''
+      components = []
+      gallery = []
+    }
+  })
 
   function handleScroll() {
-    if (editor) return; // No scroll handling for header in editor mode
-    const scrollY = window.scrollY || window.pageYOffset;
-    const hideThreshold = window.innerHeight * 0.8;
-    minifyHeader = scrollY > hideThreshold;
+    if (editor)
+      return // No scroll handling for header in editor mode
+    const scrollY = window.scrollY || window.pageYOffset
+    const hideThreshold = window.innerHeight * 0.8
+    minifyHeader = scrollY > hideThreshold
   }
 
   function scrollToContent(event: MouseEvent) {
-    event.preventDefault();
+    event.preventDefault()
 
     if (contentBody) {
       contentBody.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+        behavior: 'smooth',
+        block: 'start',
+      })
     }
   }
 
   onMount(() => {
-    if (editor) return; // No scroll listener setup in editor mode
+    if (editor)
+      return // No scroll listener setup in editor mode
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Initial check
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
+      window.removeEventListener('scroll', handleScroll)
+    }
+  })
 </script>
 
 {#if customStyle}
@@ -108,7 +114,7 @@
         in:fly={{ y: -60, duration: 700, opacity: 0 }}
         out:fly={{ y: -60, duration: 200, opacity: 0 }}
       >
-        <a href="#content" type="button" on:click={scrollToContent}>
+        <a href="#content" type="button" onclick={scrollToContent}>
           <h1 class="heading">{data.frontmatter.heading}</h1>
         </a>
       </div>

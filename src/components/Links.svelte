@@ -1,92 +1,91 @@
 <script lang="ts">
-  import {
-    Box,
-    FileUser,
-    Github,
-    Globe,
-    Instagram,
-    Linkedin,
-    Mail,
-    Rss,
-    Twitter,
-  } from "@lucide/svelte";
+  import type { RawLink } from '$types/Content'
+
+  import type { Component } from 'svelte'
 
   import {
     Si500px,
     SiArtstation,
     SiDeviantart,
+    SiGithub,
+    SiInstagram,
     SiSteam,
-  } from "@icons-pack/svelte-simple-icons";
+    SiX,
+  } from '@icons-pack/svelte-simple-icons'
+  import {
+    Box,
+    FileUser,
+    Globe,
+    Link,
+    Mail,
+    Rss,
+  } from '@lucide/svelte'
 
-  import type { RawLink } from "$types/Content";
-  import type { Component } from "svelte";
+  interface Props {
+    links?: RawLink[]
+  }
 
-  export let links: RawLink[] = [];
+  const { links = [] }: Props = $props()
 
   interface ProcessedLink {
-    href: string;
-    label: string;
-    iconComponent: any | null;
+    href: string
+    label: string
+    iconComponent: any | null
   }
 
   // Map icon names to actual Svelte components
   const iconMap: Record<string, Component | any> = {
-    default: Globe,
-    "500px": Si500px,
-    artstation: SiArtstation,
-    blog: Rss,
-    box: Box,
-    cv: FileUser,
-    deviantart: SiDeviantart,
-    email: Mail,
-    github: Github,
-    instagram: Instagram,
-    linkedin: Linkedin,
-    steam: SiSteam,
-    twitter: Twitter,
-    x: Twitter,
-  };
-
-  let processedLinks: ProcessedLink[] = [];
-
-  $: {
-    if (links) {
-      processedLinks = links
-        .map((link) => {
-          let iconComponent =
-            iconMap[link.icon ? link.icon.toLowerCase() : "default"];
-
-          if (!iconComponent) {
-            iconComponent = iconMap.default; // Fallback to default icon if not found
-          }
-
-          return {
-            href: link.url,
-            label: link.name,
-            iconComponent: iconComponent || null, // Fallback to null if not found
-          };
-        })
-        .filter((link) => link.iconComponent !== null);
-
-      // Add custom editor link in development mode
-      if (import.meta.env.DEV && typeof window !== "undefined") {
-        const url = new URL(window.location.href);
-        url.searchParams.set("editor", "true");
-        processedLinks.push({
-          href: url.toString(),
-          label: "Editor",
-          iconComponent: Box,
-        });
-      }
-    } else {
-      processedLinks = [];
-    }
+    'default': Globe,
+    '500px': Si500px,
+    'artstation': SiArtstation,
+    'blog': Rss,
+    'box': Box,
+    'cv': FileUser,
+    'deviantart': SiDeviantart,
+    'email': Mail,
+    'github': SiGithub,
+    'instagram': SiInstagram,
+    'linkedin': Link,
+    'steam': SiSteam,
+    'twitter': SiX,
+    'x': SiX,
   }
+
+  const processedLinks: ProcessedLink[] = $derived.by(() => {
+    if (!links)
+      return []
+
+    const result = links
+      .map((link) => {
+        let iconComponent = iconMap[link.icon ? link.icon.toLowerCase() : 'default']
+        if (!iconComponent)
+          iconComponent = iconMap.default
+        return {
+          href: link.url,
+          label: link.name,
+          iconComponent: iconComponent || null,
+        }
+      })
+      .filter(link => link.iconComponent !== null)
+
+    // Add custom editor link in development mode
+    if (import.meta.env.DEV && typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      url.searchParams.set('editor', 'true')
+      result.push({
+        href: url.toString(),
+        label: 'Editor',
+        iconComponent: Box,
+      })
+    }
+
+    return result
+  })
 </script>
 
 {#if processedLinks.length > 0}
   <div class="social-links">
-    {#each processedLinks as link}
+    {#each processedLinks as link (link.href)}
       <a
         href={link.href}
         target="_blank"
@@ -94,11 +93,8 @@
         aria-label={link.label}
       >
         {#if link.iconComponent}
-          <svelte:component
-            this={link.iconComponent}
-            size={16}
-            title={link.label}
-          />
+          {@const IconComponent = link.iconComponent}
+          <IconComponent size={16} title={link.label} />
         {/if}
       </a>
     {/each}

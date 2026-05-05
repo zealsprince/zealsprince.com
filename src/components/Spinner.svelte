@@ -1,5 +1,9 @@
 <script lang="ts">
-  export let size: number = 40;
+  interface Props {
+    size?: number
+  }
+
+  const { size = 40 }: Props = $props()
 </script>
 
 <div

@@ -1,18 +1,23 @@
 <script lang="ts">
-  import type { GallerySection } from "$types/Content";
-  export let images: GallerySection[] = [];
+  import type { GallerySection } from '$types/Content'
+
+  interface Props {
+    images?: GallerySection[]
+  }
+
+  const { images = [] }: Props = $props()
 </script>
 
 {#if images.length}
-  {#each images as section}
+  {#each images as section (section.name)}
     <div class="gallery">
       {#if section.name && section.showName !== false}
         <h1 class="gallery-name">{section.name}</h1>
       {/if}
       <div class="gallery-section">
-        {#each section.items as img}
+        {#each section.items as img (img.image)}
           <a href={img.url ?? img.image} target="_blank" rel="noopener">
-            <img src={img.image} alt={img.name || "Gallery"} />
+            <img src={img.image} alt={img.name || 'Gallery'} />
           </a>
         {/each}
       </div>
@@ -56,7 +61,7 @@
     position: relative;
     display: block;
 
-    &::last-child {
+    &:last-child {
       align-self: flex-start;
     }
 

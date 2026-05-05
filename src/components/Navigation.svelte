@@ -1,54 +1,57 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { fly, fade } from "svelte/transition";
-  import { onMount, onDestroy } from "svelte";
-  import { page } from "$app/state";
-  import { Box, Rss, UserRound } from "@lucide/svelte";
-  import type { Frontmatter } from "$/types/Content";
-  export let items: Frontmatter[] = [];
-  let open = false;
-  let isPointer = false;
-  let pointerListener: ((e: MediaQueryListEvent) => void) | null = null;
+  import type { Frontmatter } from '$/types/Content'
+  import { goto } from '$app/navigation'
+  import { page } from '$app/state'
+  import { Box, Rss, UserRound } from '@lucide/svelte'
+  import { onDestroy, onMount } from 'svelte'
+  import { fade, fly } from 'svelte/transition'
 
-  // Organize items by category
-  $: categories = {
-    About: items.filter((item) => item.category === "About" || !item.category),
-    Projects: items.filter((item) => item.category === "Projects"),
-    Blog: items.filter((item) => item.category === "Blog"),
-  };
+  interface Props {
+    items?: Frontmatter[]
+  }
+
+  const { items = [] }: Props = $props()
+  let open = $state(false)
+  let isPointer = $state(false)
+  let pointerListener: ((e: MediaQueryListEvent) => void) | null = null
+
+  const categories = $derived({
+    About: items.filter(item => item.category === 'About' || !item.category),
+    Projects: items.filter(item => item.category === 'Projects'),
+    Blog: items.filter(item => item.category === 'Blog'),
+  })
 
   onMount(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    isPointer = mq.matches;
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    isPointer = mq.matches
     pointerListener = (e) => {
-      isPointer = e.matches;
-    };
-    mq.addEventListener("change", pointerListener);
-  });
+      isPointer = e.matches
+    }
+    mq.addEventListener('change', pointerListener)
+  })
 
   onDestroy(() => {
     if (pointerListener) {
-      const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-      mq.removeEventListener("change", pointerListener);
+      const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+      mq.removeEventListener('change', pointerListener)
     }
-  });
+  })
 
   function navTo(slug: string) {
-    goto(slug === "index" ? "/" : `/${slug}`);
-    open = false;
+    // eslint-disable-next-line svelte/no-navigation-without-resolve
+    goto(slug === 'index' ? '/' : `/${slug}`)
+    open = false
   }
 
   // Check if a route is currently active
   function isActive(slug: string): boolean {
-    const currentPath = page.url.pathname;
-    if (slug === "index") {
-      return currentPath === "/" || currentPath === "";
+    const currentPath = page.url.pathname
+    if (slug === 'index') {
+      return currentPath === '/' || currentPath === ''
     }
-    return currentPath === `/${slug}` || currentPath === `/${slug}/`;
+    return currentPath === `/${slug}` || currentPath === `/${slug}/`
   }
 
-  $: navToggle;
-  $: navToggle = open;
 </script>
 
 {#if open}
@@ -58,23 +61,27 @@
 <nav
   class="nav-menu"
   aria-label="Main navigation"
-  on:mouseenter={() => {
-    if (isPointer) open = true;
+  onmouseenter={() => {
+    if (isPointer)
+      open = true
   }}
-  on:mouseleave={() => {
-    if (isPointer) open = false;
+  onmouseleave={() => {
+    if (isPointer)
+      open = false
   }}
-  on:focusin={() => {
-    if (isPointer) open = true;
+  onfocusin={() => {
+    if (isPointer)
+      open = true
   }}
-  on:focusout={() => {
-    if (isPointer) open = false;
+  onfocusout={() => {
+    if (isPointer)
+      open = false
   }}
 >
   <div class="nav-background"></div>
   <button
     class="nav-toggle {open ? 'open' : ''}"
-    on:click={() => (open = !open)}
+    onclick={() => (open = !open)}
     aria-label="Open navigation"
   >
     <svg viewBox="0 0 100 100" width="100%" height="100%">
@@ -94,13 +101,18 @@
             <UserRound />
             About
           </h3>
-          {#each categories.About as item}
+          {#each categories.About as item (item.slug)}
+            <!-- eslint-disable svelte/no-navigation-without-resolve -->
             <a
               class="nav-link {isActive(item.slug) ? 'active' : ''}"
-              href={item.slug === "index" ? "/" : `/${item.slug}`}
-              on:click|preventDefault={() => navTo(item.slug)}
+              href={item.slug === 'index' ? '/' : `/${item.slug}`}
+              onclick={(e) => {
+                e.preventDefault()
+                navTo(item.slug)
+              }}
               >{item.navigation ?? item.title}</a
             >
+            <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}
         </div>
       {/if}
@@ -112,13 +124,18 @@
             <Box />
             Projects
           </h3>
-          {#each categories.Projects as item}
+          {#each categories.Projects as item (item.slug)}
+            <!-- eslint-disable svelte/no-navigation-without-resolve -->
             <a
               class="nav-link {isActive(item.slug) ? 'active' : ''}"
-              href={item.slug === "index" ? "/" : `/${item.slug}`}
-              on:click|preventDefault={() => navTo(item.slug)}
+              href={item.slug === 'index' ? '/' : `/${item.slug}`}
+              onclick={(e) => {
+                e.preventDefault()
+                navTo(item.slug)
+              }}
               >{item.navigation ?? item.title}</a
             >
+            <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}
         </div>
       {/if}
@@ -130,13 +147,18 @@
             <Rss />
             Blog
           </h3>
-          {#each categories.Blog as item}
+          {#each categories.Blog as item (item.slug)}
+            <!-- eslint-disable svelte/no-navigation-without-resolve -->
             <a
               class="nav-link {isActive(item.slug) ? 'active' : ''}"
-              href={item.slug === "index" ? "/" : `/${item.slug}`}
-              on:click|preventDefault={() => navTo(item.slug)}
+              href={item.slug === 'index' ? '/' : `/${item.slug}`}
+              onclick={(e) => {
+                e.preventDefault()
+                navTo(item.slug)
+              }}
               >{item.navigation ?? item.title}</a
             >
+            <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}
         </div>
       {/if}
