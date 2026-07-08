@@ -1,21 +1,22 @@
 ---
 navigation: Andrew Lake
 heading: Andrew Lake
+description: Andrew Lake - software engineer and architect with over a decade of experience, from indie games to co-founding a startup. Also a digital artist and music producer.
 date: 2025-05-18
 scene: SceneIndex
 order: 1
 style: index
 links:
-  - title: Email
+  - name: Email
     icon: email
     url: mailto:andrew@zealsprince.com
-  - title: CV
+  - name: CV
     icon: cv
     url: https://github.com/user-attachments/files/27417964/CV.Andrew.Lake.2026.EN.NA.Sanitized.pdf
-  - title: GitHub
+  - name: GitHub
     icon: github
     url: https://github.com/zealsprince
-  - title: LinkedIn
+  - name: LinkedIn
     icon: linkedin
     url: https://www.linkedin.com/in/zealsprince/
 ---

@@ -5,10 +5,10 @@ heading: Markdown
 date: 2025-05-22
 scene: SceneCubes
 links:
-  - title: Markdown Guide
+  - name: Markdown Guide
     icon: globe
     url: https://www.markdownguide.org/
-  - title: GitHub Markdown
+  - name: GitHub Markdown
     icon: github
     url: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
 ---

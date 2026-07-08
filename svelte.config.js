@@ -9,7 +9,7 @@ export default {
     adapter: adapter({
       pages: 'build',
       assets: 'build',
-      fallback: 'index.html', // or '200.html' or '404.html'
+      fallback: '404.html', // GitHub Pages serves this for unknown routes, keeping the prerendered index.html intact
       precompress: true,
       strict: true,
     }),

@@ -1,6 +1,7 @@
 ---
 navigation: zealsprince
 heading: zealsprince
+description: zealsprince is my creative handle - game development, mods, digital art, animation and music. Cover art for artists on Monstercat, NCS and more.
 date: 2025-05-18
 scene: SceneZealsprince
 order: 2

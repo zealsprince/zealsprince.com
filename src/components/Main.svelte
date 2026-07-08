@@ -27,6 +27,16 @@
 
   const { data, editor = false }: Props = $props()
 
+  const pageTitle = $derived(
+    data.frontmatter?.heading && data.frontmatter.heading !== 'zealsprince'
+      ? `${data.frontmatter.heading} - zealsprince`
+      : 'zealsprince',
+  )
+  const pageDescription = $derived(
+    data.frontmatter?.description
+    ?? 'Andrew Lake (zealsprince) - software engineer, architect and digital artist.',
+  )
+
   // Variables for non-editor mode
   let content = $state('')
   let components: Array<{
@@ -92,6 +102,15 @@
     }
   })
 </script>
+
+<svelte:head>
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="zealsprince" />
+</svelte:head>
 
 {#if customStyle}
   <link rel="stylesheet" href={customStyle} />

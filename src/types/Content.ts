@@ -1,4 +1,3 @@
-// filepath: /Users/andrew/Projects/zealsprince/zealsprince.com/src/types/Content.ts
 import type { Component } from 'svelte'
 
 export interface RawLink {
@@ -23,6 +22,7 @@ export interface GallerySection {
 export interface Frontmatter {
   navigation?: string
   heading?: string
+  description?: string // Meta description used for SEO and social embeds
   date?: string // Consider using Date if parsed and formatting in component
   scene?: string | null
   style?: string

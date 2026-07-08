@@ -54,8 +54,9 @@ Content pages are written in Markdown and stored in the `content/` directory. Ea
 - `scene` (string): Svelte scene component to use.
 - `style` (string): Optional style or CSS class for the page.
 - `order` (number): Used for sorting navigation.
+- `description` (string, optional): Meta description used for SEO and social embeds.
 - `links` (array of objects): List of external links. Each link has:
-  - `title` (string): Link label
+  - `name` (string): Link label
   - `icon` (string, optional): Icon name (e.g., "github", "linkedin")
   - `url` (string): Link URL
 - `gallery` (array of objects, optional): List of gallery items. Each item has:
