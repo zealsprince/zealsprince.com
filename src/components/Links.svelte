@@ -16,16 +16,18 @@
     Box,
     FileUser,
     Globe,
-    Link,
     Mail,
     Rss,
   } from '@lucide/svelte'
+  import LinkedIn from './icons/LinkedIn.svelte'
 
   interface Props {
     links?: RawLink[]
+    /** Lay out in flow instead of floating over the hero. */
+    inline?: boolean
   }
 
-  const { links = [] }: Props = $props()
+  const { links = [], inline = false }: Props = $props()
 
   interface ProcessedLink {
     href: string
@@ -45,7 +47,7 @@
     'email': Mail,
     'github': SiGithub,
     'instagram': SiInstagram,
-    'linkedin': Link,
+    'linkedin': LinkedIn,
     'steam': SiSteam,
     'twitter': SiX,
     'x': SiX,
@@ -84,7 +86,7 @@
 </script>
 
 {#if processedLinks.length > 0}
-  <div class="social-links">
+  <div class="social-links" class:inline>
     {#each processedLinks as link (link.href)}
       <a
         href={link.href}
@@ -102,16 +104,36 @@
 {/if}
 
 <style lang="scss">
+  /* Positioned by whatever places it, so the same component works centred under
+     the hero and inline in a footer. */
   .social-links {
-    position: absolute;
-    bottom: 3rem;
-    right: 3rem;
     display: flex;
     flex-direction: row;
     gap: 1.2rem;
-    z-index: 10;
     background: none;
     pointer-events: auto;
+  }
+
+  // Footer placement: in the flow, no backdrop discs needed over a solid page
+  .social-links.inline {
+    position: static;
+    gap: var(--space-md);
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    a {
+      background-color: transparent;
+      backdrop-filter: none;
+      width: auto;
+      height: auto;
+      opacity: 0.7;
+    }
+
+    a:hover {
+      background-color: transparent;
+      transform: none;
+      opacity: 1;
+    }
   }
   .social-links a {
     color: var(--color-primary);
@@ -135,10 +157,8 @@
   }
 
   @media (max-width: 900px) {
-    .social-links {
-      bottom: 2.25rem;
-      right: 2.25rem;
-      flex-direction: column;
+    .social-links:not(.inline) {
+      gap: 0.9rem;
     }
   }
 </style>

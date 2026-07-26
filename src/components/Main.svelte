@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { ContentData, ContentDirective, GallerySection } from '$types/Content'
+  import type { ContentData, ContentDirective, GallerySection, NavItem } from '$types/Content'
   import { theme } from '$/lib/client/theme.svelte'
+  import { buildCrumbs, slugFromPath } from '$/lib/navigation'
   import { getPalette, getPalettePair, paletteStyleTag } from '$/lib/palettes'
   import { structuredDataTag } from '$/lib/schema'
   import {
@@ -20,10 +21,13 @@
   import { onMount } from 'svelte'
   import { fly } from 'svelte/transition'
   import Content from './Content.svelte'
+  import Footer from './Footer.svelte'
   import Gallery from './Gallery.svelte'
   import Links from './Links.svelte'
+  import Navigation from './Navigation.svelte'
   import ThemeToggle from './ThemeToggle.svelte'
   import Threalte from './Threlte.svelte'
+  import Trail from './Trail.svelte'
 
   interface Props {
     data: ContentData
@@ -48,6 +52,14 @@
   const isPost = $derived(data.frontmatter?.category === 'Blog')
   const published = $derived(isoDate(data.frontmatter?.date))
 
+  // Layout data, so it is here on the error page too
+  const navItems: NavItem[] = $derived(page.data?.navItems ?? [])
+  const slug = $derived(slugFromPath(page.url.pathname))
+  const crumbs = $derived(buildCrumbs(slug, navItems))
+  const currentLabel = $derived(
+    data.frontmatter?.navigation || data.frontmatter?.heading || '',
+  )
+
   const jsonLd = $derived(structuredDataTag({
     frontmatter: data.frontmatter ?? {},
     canonical,
@@ -55,6 +67,8 @@
     description: pageDescription,
     image: pageImage,
     isHome,
+    crumbs,
+    currentLabel,
   }))
 
   // Derived, not copied into $state by an effect. Effects do not run during
@@ -170,51 +184,71 @@
     <div class="scene">
       <Threalte {scene} sceneColor={palette.scene} />
     </div>
-    <div class="theme-control">
-      <ThemeToggle />
-    </div>
-    {#if !minifyHeader}
-      <div
-        class="header"
-        in:fly={{ y: -60, duration: 700, opacity: 0 }}
-        out:fly={{ y: -60, duration: 200, opacity: 0 }}
-      >
-        <a href="#content" type="button" onclick={scrollToContent}>
-          <h1 class="heading">{data.frontmatter.heading}</h1>
-        </a>
+
+    <!-- Three slots: menu, where you are, appearance. The trail takes the
+         middle so it stays centred regardless of how wide either control is. -->
+    <div class="chrome">
+      <div class="chrome-left">
+        <Navigation items={navItems} />
       </div>
-    {:else}
-      <h1
-        class="heading-fixed"
-        transition:fly={{ y: 20, duration: 200, opacity: 0 }}
-      >
-        {data.frontmatter?.heading}
-      </h1>
-    {/if}
-    <div style="position: relative; height: 100vh;"></div>
-    <!-- Spacer for visualization and title overlay -->
+      <div class="chrome-center">
+        {#if minifyHeader}
+          <!-- Rises from below, following the direction the page just scrolled,
+               rather than dropping in against it. -->
+          <div transition:fly={{ y: 20, duration: 200, opacity: 0 }}>
+            <Trail {crumbs} current={currentLabel} />
+          </div>
+        {/if}
+      </div>
+      <div class="chrome-right">
+        <ThemeToggle />
+      </div>
+    </div>
+
+    <section class="hero">
+      {#if !minifyHeader}
+        <div
+          class="hero-inner shell"
+          in:fly={{ y: -60, duration: 700, opacity: 0 }}
+          out:fly={{ y: -60, duration: 200, opacity: 0 }}
+        >
+          <a class="hero-title" href="#content" onclick={scrollToContent}>
+            <h1 class="heading">{data.frontmatter.heading}</h1>
+          </a>
+        </div>
+      {/if}
+
+      <!-- Inside the hero, so they scroll away with it. Fixed positioning left
+           them floating over the article the whole way down. -->
+      <div class="hero-links">
+        <Links links={data.links} />
+      </div>
+    </section>
+
     <div id="content" class="content" bind:this={contentBody}>
-      <div class="markdown markdown">
-        <Content html={content} {components} />
-      </div>
-      <div class="gallery">
-        <Gallery images={gallery} />
-      </div>
+      <article class="shell">
+        <div class="markdown prose">
+          <Content html={content} {components} />
+        </div>
+
+        {#if gallery.length > 0}
+          <div class="gallery">
+            <Gallery images={gallery} />
+          </div>
+        {/if}
+      </article>
+
+      <Footer links={data.links} />
     </div>
-    <!-- Social Links: bottom right -->
-    {#if !minifyHeader && !editor}
-      <Links links={data.links} />
-    {/if}
   </main>
 {/if}
 
 <style lang="scss">
   @use "@/vars.scss" as vars;
 
-  /* Base content styles */
   main {
     z-index: 1;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -228,139 +262,184 @@
     height: 100vh;
   }
 
-  .header {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    color: var(--color-primary);
-    text-align: left;
-    max-width: 80vw;
+  /* Fixed control bar. Menu and theme toggle group on the left, the trail rides
+     in on the right once the hero is gone. */
+  .chrome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    /* Equal outer columns, so the middle one is centred on the viewport rather
+       than on whatever space the controls happen to leave. */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+
+    /* Its own layer rather than a background on the bar, so the blur sits
+       behind the controls without the dropdown inheriting it. */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--color-background) 45%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 70%, transparent);
+      backdrop-filter: blur(16px);
+      pointer-events: none;
+      z-index: -1;
+    }
   }
 
-  .heading {
-    color: var(--color-primary);
-    font-size: var(--font-size-xl);
-    font-weight: 100;
-    line-height: 1.2;
-    text-transform: uppercase;
-    margin: 0;
+  .chrome-left {
+    display: flex;
+    align-items: center;
+    justify-self: start;
+  }
+
+  .chrome-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .chrome-right {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+  }
+
+  /* Hero. Centered rather than pinned to a corner, so the scene reads as a
+     backdrop for something instead of empty space with a label on it. */
+  .hero {
+    position: relative;
+    z-index: 5;
     width: 100%;
-    max-width: var(--text-max-width);
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Bottom weighted rather than dead centre. Perfectly centred type left the
+       block floating with nothing under it; sitting it above the links makes
+       the two read as one group and gives the scene the room instead. */
+    justify-content: flex-end;
+    padding-bottom: calc(var(--space-lg) + 4.5rem);
+    text-align: center;
 
-    transition: all 0.2s ease;
+    /* The scene runs behind the type and the cube scenes in particular drift
+       right through it. A soft scrim guarantees the words read on every seed
+       and every frame, without flattening the scene at the edges. */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 70% 45% at 50% 78%,
+        color-mix(in srgb, var(--color-background) 82%, transparent) 0%,
+        color-mix(in srgb, var(--color-background) 55%, transparent) 45%,
+        transparent 78%
+      );
+      pointer-events: none;
+    }
+  }
 
-    &:hover {
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  /* The title is the scroll affordance, same as it was before. */
+  .hero-title {
+    display: block;
+    color: inherit;
+
+    &:hover .heading {
       color: var(--color-link);
     }
   }
 
-  .theme-control {
-    position: fixed;
-    top: 1.5rem;
-    right: 1.75rem;
-    z-index: 26;
-  }
-
-  .heading-fixed {
-    position: fixed;
-    top: 1.5rem;
-    /* Clears the theme toggle sitting in the same corner */
-    right: 4.75rem;
+  .heading {
     color: var(--color-primary);
-    text-align: right;
-    max-width: 70vw;
-    font-size: var(--font-size-md);
-    font-weight: 100;
-    line-height: var(--font-size-subtitle);
+    /* Half of --font-size-xl. The hero is the one place the scene gets to be
+       the subject, and at 8rem the type was taking the room it needed. */
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-light);
+    line-height: 1.05;
     text-transform: uppercase;
     margin: 0;
-    z-index: 100;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    transition: color 0.2s ease;
+  }
+
+  .hero-links {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
   }
 
   .content {
-    min-height: 90vh;
-    border-top: 1px solid var(--color-secondary);
-    background: color-mix(in srgb, var(--color-background) 70%, transparent);
-    backdrop-filter: blur(16px);
-    z-index: 5;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
+    position: relative;
     width: 100%;
-    gap: 1.5rem;
-  }
-
-  .markdown {
-    flex: 2 1 0;
-    max-width: var(--content-text-max-width);
-    text-align: justify;
-    color: var(--color-text);
-    border-radius: 1rem;
-    padding: 0 2rem;
-  }
-
-  .gallery {
-    flex: 1 1 0;
-    min-width: 250px;
+    min-height: 60vh;
+    border-top: 1px solid var(--color-secondary);
+    background: color-mix(in srgb, var(--color-background) 88%, transparent);
+    backdrop-filter: blur(20px);
+    z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
+    padding-top: var(--space-2xl);
   }
 
-  /* Styles for editor mode to ensure Threalte can take full space if needed */
+  /* Single centered column. The gallery used to be a 250px sidebar next to the
+     prose, which squeezed both; it now runs the full width below it. */
+  .prose {
+    max-width: var(--measure);
+    margin-inline: auto;
+    color: var(--color-text);
+  }
+
+  .gallery {
+    width: 100%;
+    margin-top: var(--space-2xl);
+  }
+
   .editor-mode {
     width: 100vw;
     height: 100vh;
-    display: flex; /* Ensure Threalte can expand */
+    display: flex;
     align-items: stretch;
     justify-content: stretch;
   }
   .editor-mode > :global(div) {
-    /* Target Threalte's wrapper */
     flex-grow: 1;
   }
 
-  @media (max-width: vars.$breakpoint-xl) {
-    .content {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 2rem;
-    }
-
-    .markdown {
-      max-width: 100vw;
-    }
-  }
-
   @media (max-width: vars.$breakpoint-lg) {
-    .heading {
-      font-size: var(--font-size-lg);
+    .chrome {
+      padding: var(--space-sm) var(--space-md);
     }
+
+    /* No heading step here any more. It used to drop 8rem to 4rem, and 4rem is
+       now the desktop size, so the small screens are unchanged. */
 
     .content {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1.5rem;
-    }
-
-    .markdown {
-      max-width: none;
-    }
-  }
-
-  @media (max-width: vars.$breakpoint-md) {
-    .content {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
+      padding-top: var(--space-xl);
     }
   }
 

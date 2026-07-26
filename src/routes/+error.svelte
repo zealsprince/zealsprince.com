@@ -29,14 +29,19 @@
   {@html paletteStyleTag('index')}
 </svelte:head>
 
-<Navigation items={navItems} />
-
 <main>
   <div class="scene">
     <Threlte scene={SceneName.SceneCubes} sceneColor={palette.scene} />
   </div>
-  <div class="theme-control">
-    <ThemeToggle />
+
+  <div class="chrome">
+    <div class="chrome-left">
+      <Navigation items={navItems} />
+    </div>
+    <div></div>
+    <div class="chrome-right">
+      <ThemeToggle />
+    </div>
   </div>
 
   <div class="panel">
@@ -53,10 +58,12 @@
 
   main {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .scene {
@@ -67,18 +74,54 @@
     height: 100vh;
   }
 
-  .theme-control {
+  /* Same bar as every other page, so a 404 does not feel like a different site */
+  .chrome {
     position: fixed;
-    top: 1.5rem;
-    right: 1.75rem;
-    z-index: 26;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--color-background) 45%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 70%, transparent);
+      backdrop-filter: blur(16px);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
+  .chrome-left {
+    display: flex;
+    align-items: center;
+    justify-self: start;
+  }
+
+  .chrome-right {
+    display: flex;
+    align-items: center;
+    justify-self: end;
   }
 
   .panel {
     position: relative;
     z-index: 5;
-    margin: 0 0 2rem 2rem;
-    max-width: min(40rem, 80vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: min(40rem, 85vw);
   }
 
   .status {
@@ -91,7 +134,8 @@
 
   .heading {
     color: var(--color-primary);
-    font-size: var(--font-size-xl);
+    /* Matches the hero heading on every other page */
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-light);
     line-height: 1.2;
     text-transform: uppercase;
@@ -116,12 +160,6 @@
 
     &:hover {
       letter-spacing: 0.12em;
-    }
-  }
-
-  @media (max-width: vars.$breakpoint-lg) {
-    .heading {
-      font-size: var(--font-size-lg);
     }
   }
 

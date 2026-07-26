@@ -1,7 +1,5 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import { contentIndex, HOME_SLUG } from '$lib/server/content'
 import { isoDate, pageUrl } from '$lib/site'
-import matter from 'gray-matter'
 
 export const prerender = true
 
@@ -11,29 +9,26 @@ interface Entry {
   priority: string
 }
 
+/** Deeper pages get a lower priority, floored so nothing drops out of sight. */
+function priorityFor(slug: string): string {
+  if (slug === HOME_SLUG)
+    return '1.0'
+
+  const depth = slug.split('/').length
+  return Math.max(0.5, 0.8 - (depth - 1) * 0.2).toFixed(1)
+}
+
 export async function GET() {
-  const contentDir = path.resolve('content')
-  const files = await fs.readdir(contentDir)
+  const index = await contentIndex()
 
-  const entries: Entry[] = []
-  for (const file of files) {
-    if (!file.endsWith('.md'))
-      continue
-
-    const raw = await fs.readFile(path.join(contentDir, file), 'utf-8')
-    const { data } = matter(raw)
-
+  const entries: Entry[] = index
     // Hidden pages stay out of navigation, so keep them out of the sitemap too
-    if (data.hidden === true)
-      continue
-
-    const slug = file.replace(/\.md$/, '')
-    entries.push({
-      url: pageUrl(slug),
-      lastmod: isoDate(data.date),
-      priority: slug === 'index' ? '1.0' : '0.8',
-    })
-  }
+    .filter(entry => entry.frontmatter.hidden !== true)
+    .map(entry => ({
+      url: pageUrl(entry.slug),
+      lastmod: isoDate(entry.frontmatter.date),
+      priority: priorityFor(entry.slug),
+    }))
 
   entries.sort((a, b) => a.url.localeCompare(b.url))
 

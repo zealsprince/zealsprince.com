@@ -1,8 +1,8 @@
 ---
-title: zealsprince - Game Development, Digital Art and Music
+title: zealsprince - Game Development, Modding and Digital Art
 navigation: zealsprince
 heading: zealsprince
-description: zealsprince is my creative handle - game development, mods, digital art, animation and music. Cover art for artists on Monstercat, NCS and more.
+description: zealsprince is my creative handle - indie game development, modding, cover art and digital art. Home of the Lethal Company mods and my album cover work.
 date: 2025-05-18
 scene: SceneZealsprince
 order: 2
@@ -28,11 +28,8 @@ links:
     icon: 500px
     url: https://500px.com/p/zealsprince?view=photos
 gallery:
-  - name: Artwork
+  - name: Cover Art
     items:
-      - name: Lethal Company - Community Art Competition
-        image: https://i.imgur.com/3fyVDTi.png
-        url: https://i.imgur.com/3fyVDTi.png
       - name: Silent Poets - Asylum for the Feeling Cover Art
         image: https://i.imgur.com/G8yNJ42.jpeg
         url: https://i.imgur.com/G8yNJ42.jpeg
@@ -42,28 +39,31 @@ gallery:
       - name: A_Rival - Venus Cover Art
         image: https://i.imgur.com/5pjh6DM.jpeg
         url: https://i.imgur.com/5pjh6DM.jpeg
+  - name: Artwork
+    items:
+      - name: Lethal Company - Community Art Competition
+        image: https://i.imgur.com/3fyVDTi.png
+        url: https://i.imgur.com/3fyVDTi.png
 ---
 
 # Creative Demon
 
-zealsprince is my primary online handle. I use it for most of my online presence and is generally a more recognizable name than my real name. I also use it for my game development, digital art, animation, music and modding work.
+zealsprince is my primary online handle, and generally a more recognisable name than my real one. It covers my game development, modding, art and community work.
 
-Although there's clearly overlap between my professional and personal work, I try to keep them separate. Practicing good digital hygiene I suppose.
+There is obvious overlap between my professional and personal work, but I keep them apart. Good digital hygiene, I suppose. zealsprince is where I experiment, try things that might not work, and run the more casual projects, especially around games and online communities.
 
-In general zealsprince is where I experiment more, try new things and manage more casual projects especially related to games and online community management.
+It is not the handle I have always used. A lot of my older work sits under [Catlinman](/catlinman/), which I retired in 2020.
 
 ## Game Development
 
-My main interest in game development is in the indie scene. I love the creativity and freedom that comes with it as well as the community aspect and the vast creative spectrum of disciplines involved. I love to experiment with new ideas and concepts, and indie game development is the perfect place for that.
+My interest is in the indie scene: the creative freedom, the community around it, and how many disciplines a small team has to touch. It is the best place I know to test an idea quickly.
 
-You'll see me join game jams from time to time but primarily these days I focus on modding of existing games. I find it a great way to learn and experiment with new ideas while also being able to share my work with others.
+I still turn up to game jams, but these days the bulk of it is modding existing games. It is a fast way to learn, and the work reaches people immediately. There is a good chance you have run into one of my [Lethal Company](/lethal-company/) mods without knowing it.
 
-There's a good chance you'll recognize some of my mods especially for Lethal Company.
-
-Professionally, I've worked with indie game developers at Mojang Studios (specifically the previous Oxeye Games developers), Klei Entertainment and more, having done testing and engaged in feedback cycles.
+Professionally I have worked with indie developers at Mojang Studios, specifically the former Oxeye Games team, and at Klei Entertainment, doing testing and feedback cycles.
 
 ## Digital Art
 
-In the past I've done most of my digital art as Catlinman, but I've since transitioned to using zealsprince for all my creative work. There's not nearly as much of that as there is for Catlinman right now, but I'm working on it (professional life and art can be tricky to balance!)
+Cover art is the work I am happiest with. A cover has one job, it has to survive being shrunk to a thumbnail in a list of a thousand others, and it has to belong to someone else's record rather than to me. That constraint is the interesting part.
 
-Most of my work you'll find is for myself, but I've also received commissions from music artists on labels such as Monstercat, NCS and more to create cover art as well as animated visuals and music videos. I'm always open to new commissions and projects, so feel free to reach out if you're interested in working together!
+Alongside that there is the work that is only mine: pieces I make because I want to, community art like the Lethal Company competition entry, and whatever the current project needs.

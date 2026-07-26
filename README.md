@@ -48,6 +48,25 @@ static/          # Static assets (favicon, robots.txt, social cards, CNAME)
 
 Content pages are written in Markdown and stored in the `content/` directory. Each file begins with a frontmatter block that defines metadata and configuration for the page.
 
+### Layout and sub-pages
+
+The directory layout is the URL layout. A page is either a file or a directory with an `index.md`, and a directory's other files become its sub-pages:
+
+```text
+content/
+  index.md                    ->  /
+  me.md                       ->  /me/
+  rox/
+    index.md                  ->  /rox/
+    nekorox.md                ->  /rox/nekorox/
+  lethal-company/
+    index.md                  ->  /lethal-company/
+    locker.md                 ->  /lethal-company/locker/
+    malfunctions.md           ->  /lethal-company/malfunctions/
+```
+
+Sub-pages appear in the menu indented under their parent, and get a breadcrumb trail plus `BreadcrumbList` structured data. Nesting is one level deep in the menu; deeper directories still build and still get full breadcrumbs.
+
 ### Frontmatter
 
 A page names itself three times, and the three fields are separate on purpose:
@@ -66,6 +85,7 @@ The rest:
 - `description` (string, optional): Meta description used for SEO and social embeds.
 - `image` (string, optional): Social card, root-relative or absolute. Falls back to `/og/default.jpg`. Should be 1200x630.
 - `hidden` (boolean, optional): Keeps the page out of the menu, the sitemap and search results. The page is still built and reachable by URL.
+- `draft` (boolean, optional): Work in progress. The page is live under `npm run dev` and left out of a production build entirely, so the file can be committed and pushed without ever reaching the deployed site. Links to a draft from a published page render as plain text rather than dead links.
 - `links` (array of objects): List of external links. Each link has:
   - `name` (string): Link label
   - `icon` (string, optional): Icon name (e.g., "github", "linkedin")
@@ -103,7 +123,9 @@ The `--level-*` ramp in `src/app.scss` is mixed from the active palette and driv
 
 ## Metadata
 
-Canonical URLs, Open Graph, Twitter cards and the `theme-color` pair are built in `src/components/Main.svelte` from the frontmatter. JSON-LD lives in `src/lib/schema.ts`, which emits a `Person` and a `WebSite` node on the homepage and links every other page to them by id.
+Canonical URLs, Open Graph, Twitter cards and the `theme-color` pair are built in `src/components/Main.svelte` from the frontmatter. JSON-LD lives in `src/lib/schema.ts`, which emits a `Person` and a `WebSite` node on the homepage, links every other page to them by id, and adds a `BreadcrumbList` on any page that has ancestors.
+
+`src/lib/server/content.ts` is the single walk of the content directory. Navigation, the sitemap and the prerender entry list all read from it, so they cannot disagree about what exists, what is hidden, or what is still a draft.
 
 `SITE_PROFILES` in `src/lib/site.ts` is the profile list for the `sameAs` field. It is a list rather than something derived from page links, because the Person entity has to stay the same on every page and project pages link to repos and store pages that are not Andrew.
 

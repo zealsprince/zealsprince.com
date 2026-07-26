@@ -4,14 +4,14 @@
     {
       "name": "zealsprince.com",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 5173
+      "runtimeArgs": ["run", "dev", "--", "--port", "5173", "--strictPort"],
+      "port": 5180
     },
     {
-      "name": "zealsprince.com (preview)",
+      "name": "zealsprince.com (production preview)",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview", "--", "--port", "4173"],
-      "port": 4173
+      "runtimeArgs": ["run", "preview", "--", "--port", "5174", "--strictPort"],
+      "port": 4180
     }
   ]
 }

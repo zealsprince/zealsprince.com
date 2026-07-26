@@ -29,10 +29,10 @@
   @use "@/vars.scss" as vars;
 
   .gallery-name {
-    font-size: var(--font-size-md);
+    font-size: calc(var(--font-size-md) * 0.72);
     font-weight: var(--font-weight-light);
-    margin: 1rem 0 0 2rem;
-    color: var(--color-primary);
+    margin: 0 0 var(--space-md);
+    color: var(--color-text);
     text-transform: uppercase;
 
     display: flex;
@@ -43,18 +43,20 @@
       flex: 1;
       height: 1px;
       background-color: var(--color-secondary);
-      margin-left: 1rem;
-      margin-right: 1rem;
+      margin-left: var(--space-sm);
     }
   }
 
+  /* No padding of its own: the shell around it already provides the gutter, and
+     adding more here is what pushed the grid past the edge of the page. The
+     track minimum is capped at 100% so a column can never be wider than the
+     column it has to fit in. */
   .gallery-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-md);
     align-items: flex-start;
-    padding: 0 2rem;
-    margin: 1rem 0;
+    margin: 0 0 var(--space-lg);
   }
 
   .gallery-section a {
@@ -99,50 +101,16 @@
     filter: drop-shadow(8px 8px 0.5rem rgba(0, 0, 0, 0.1));
   }
 
-  @media (max-width: vars.$breakpoint-xl) {
-    .gallery-name {
-      margin-bottom: 1rem;
-
-      &::after {
-        margin-right: 2rem;
-      }
-    }
-
-    .gallery-section {
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      justify-content: space-between;
-    }
-
-    .gallery-section img {
-      padding: 0rem;
-    }
-  }
-
   @media (max-width: vars.$breakpoint-lg) {
     .gallery-section {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin: 0;
-      padding: 0;
+      grid-template-columns: 1fr;
     }
 
-    .gallery-section a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-
-      &:before {
-        background: none;
-      }
+    .gallery-section a:before {
+      background: none;
     }
 
     .gallery-section img {
-      max-width: 100%;
-      min-width: 100%;
-      width: inherit;
-      height: inherit;
       padding: 0;
     }
   }

@@ -67,9 +67,23 @@ export function absolute(path: string): string {
   return `${SITE_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`
 }
 
-/** Public URL for a content slug. Matches the `trailingSlash: 'always'` kit config. */
+/**
+ * The homepage's internal slug. Lives here rather than in the content indexer
+ * because the client needs it too and the indexer imports `node:fs`.
+ */
+export const HOME_SLUG = 'index'
+
+/**
+ * Root-relative path for a content slug. Slugs are path-shaped, so `rox/nekorox`
+ * becomes `/rox/nekorox/`. Matches the `trailingSlash: 'always'` kit config.
+ */
+export function pagePath(slug: string): string {
+  return slug === HOME_SLUG ? '/' : `/${slug}/`
+}
+
+/** Absolute public URL for a content slug. */
 export function pageUrl(slug: string): string {
-  return slug === 'index' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/${slug}/`
+  return `${SITE_ORIGIN}${pagePath(slug)}`
 }
 
 /**

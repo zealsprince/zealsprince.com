@@ -34,32 +34,30 @@
 </button>
 
 <style lang="scss">
+  /* Bare, like the menu toggle opposite it. The disc and its blur were there
+     from when this floated over the scene; inside the chrome bar the bar
+     already provides the backdrop and the disc just read as a stray chip. */
   .theme-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     padding: 0;
 
     color: var(--color-primary);
-    background-color: var(--color-background);
+    background: none;
     border: none;
-    border-radius: 50%;
     cursor: pointer;
-    opacity: 0.8;
-    backdrop-filter: blur(16px);
-    transition: all 0.2s ease;
+    transition: color 0.2s ease;
 
     &:hover {
-      opacity: 1;
-      transform: scale(1.1);
       color: var(--color-link);
     }
 
     &:focus-visible {
       outline: 2px solid var(--color-link);
-      outline-offset: 2px;
+      outline-offset: 4px;
     }
   }
 </style>

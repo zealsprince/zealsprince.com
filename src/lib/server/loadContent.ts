@@ -1,11 +1,12 @@
 import type { ContentData, ContentDirective, Frontmatter, GallerySection } from '$types/Content'
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import { pagePath } from '$lib/site'
 import { error } from '@sveltejs/kit'
 import matter from 'gray-matter'
 import yaml from 'js-yaml'
 import { marked } from 'marked'
 import markedKatex from 'marked-katex-extension'
+import { draftSlugs, isDraft, resolveContentFile } from './content'
 
 /**
  * Props inside `::name{...}::` are parsed as a YAML flow mapping rather than
@@ -56,6 +57,30 @@ function parseComponents(content: string): { content: string, components: Conten
 }
 
 /**
+ * Unwrap links that point at a page this build left out.
+ *
+ * A published page can reference a draft while the draft is being written. The
+ * anchor becomes plain text rather than a link to a URL that will 404, which
+ * also keeps the strict prerender from failing on a dead internal link. The
+ * words stay, so the sentence still reads.
+ */
+function softenDraftLinks(html: string, drafts: Set<string>): string {
+  if (drafts.size === 0)
+    return html
+
+  return [...drafts].reduce((acc, slug) => {
+    const href = pagePath(slug)
+    // Match the path with or without its trailing slash
+    const pattern = new RegExp(
+      `<a[^>]*href="${href.replace(/\/$/, '')}/?"[^>]*>([\\s\\S]*?)</a>`,
+      'g',
+    )
+
+    return acc.replace(pattern, '$1')
+  }, html)
+}
+
+/**
  * Gallery sections as written in frontmatter. `name` is optional, and leaving
  * it off renders the group without a heading. Sections with no usable items are
  * dropped so a half-written block does not render an empty grid.
@@ -74,23 +99,37 @@ function parseGallery(gallery: Frontmatter['gallery']): GallerySection[] {
 }
 
 export async function loadContent(slug: string): Promise<ContentData> {
-  const mdPath = path.resolve('content', `${slug}.md`)
-  let raw
-  try {
-    raw = await fs.readFile(mdPath, 'utf-8')
+  // A page is either `rox.md` or `rox/index.md`. The second form is what lets
+  // a page have sub-pages sitting beside it in the same directory.
+  let raw: string | undefined
+  for (const candidate of resolveContentFile(slug)) {
+    try {
+      raw = await fs.readFile(candidate, 'utf-8')
+      break
+    }
+    catch {
+      continue
+    }
   }
-  catch {
+
+  if (raw === undefined)
     throw error(404, 'Markdown file not found')
-  }
+
   const { data, content } = matter(raw)
   const frontmatter = data as Frontmatter // Cast to Frontmatter type
+
+  // A draft is not part of a production build. It is never in the prerender
+  // entry list, so this is only reached if something asks for it directly.
+  if (isDraft(frontmatter))
+    throw error(404, 'Markdown file not found')
 
   // Parse components before processing markdown
   const { content: contentWithPlaceholders, components } = parseComponents(content)
 
   marked.use(markedKatex())
 
-  const html = await marked.parse(contentWithPlaceholders, {}) // Await the promise from marked.parse
+  const parsed = await marked.parse(contentWithPlaceholders, {}) // Await the promise from marked.parse
+  const html = softenDraftLinks(parsed, await draftSlugs())
 
   const scene = frontmatter.scene ?? null
   const links = frontmatter.links ?? []

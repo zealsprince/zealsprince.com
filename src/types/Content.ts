@@ -35,6 +35,13 @@ export interface Frontmatter {
   order?: number
   category?: Category // Category field for content organization
   hidden?: boolean // Keeps the page out of navigation, the sitemap and search results
+  /**
+   * Unfinished. The page exists in `npm run dev` and is left out of a
+   * production build entirely: no HTML, no sitemap entry, no menu link. Push
+   * the file whenever you like, it does not reach the deployed site until this
+   * comes off. Distinct from `hidden`, which still ships the page.
+   */
+  draft?: boolean
   links?: RawLink[]
   gallery?: GallerySection[]
   [key: string]: any // For any other properties in frontmatter
@@ -42,12 +49,27 @@ export interface Frontmatter {
 
 /** A page as the navigation menu sees it, built from frontmatter at build time. */
 export interface NavItem {
+  /** Path-shaped: `index`, `me`, `rox`, `rox/nekorox`. */
   slug: string
   heading: string
   navigation: string
   order: number
   style: string
   category: Category
+  /** Slug of the page above this one, or null at the top level. */
+  parent: string | null
+}
+
+/** A nav item with its sub-pages attached. One level of nesting, deliberately. */
+export interface NavNode extends NavItem {
+  children: NavItem[]
+}
+
+/** One step in the trail from the homepage down to the current page. */
+export interface Crumb {
+  slug: string
+  label: string
+  href: string
 }
 
 export interface ContentDirective {

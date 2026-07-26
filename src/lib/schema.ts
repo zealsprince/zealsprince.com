@@ -1,4 +1,4 @@
-import type { Frontmatter } from '$types/Content'
+import type { Crumb, Frontmatter } from '$types/Content'
 import {
   absolute,
   isoDate,
@@ -23,6 +23,10 @@ interface SchemaOptions {
   image: string
   /** True for the site root, which is where the Person and WebSite nodes live. */
   isHome: boolean
+  /** Ancestors of this page, homepage first. Empty at the top level. */
+  crumbs: Crumb[]
+  /** Label for the current page, the last step of the breadcrumb trail. */
+  currentLabel: string
 }
 
 /**
@@ -38,7 +42,7 @@ interface SchemaOptions {
  * here and not the template.
  */
 export function structuredDataTag(options: SchemaOptions): string {
-  const { frontmatter, canonical, title, description, image, isHome } = options
+  const { frontmatter, canonical, title, description, image, isHome, crumbs, currentLabel } = options
 
   const graph: Record<string, unknown>[] = []
 
@@ -90,6 +94,33 @@ export function structuredDataTag(options: SchemaOptions): string {
   if (published) {
     page.datePublished = published
     page.dateModified = published
+  }
+
+  // A sub-page states where it sits. Without this the hierarchy only exists in
+  // the URL, and a crawler has to infer that /rox/nekorox/ belongs under /rox/.
+  if (crumbs.length > 0) {
+    const breadcrumbId = `${canonical}#breadcrumb`
+
+    page.breadcrumb = { '@id': breadcrumbId }
+
+    graph.push({
+      '@type': 'BreadcrumbList',
+      '@id': breadcrumbId,
+      'itemListElement': [
+        ...crumbs.map((crumb, index) => ({
+          '@type': 'ListItem',
+          'position': index + 1,
+          'name': crumb.label,
+          'item': `${SITE_ORIGIN}${crumb.href}`,
+        })),
+        {
+          '@type': 'ListItem',
+          'position': crumbs.length + 1,
+          'name': currentLabel || title,
+          'item': canonical,
+        },
+      ],
+    })
   }
 
   graph.push(page)

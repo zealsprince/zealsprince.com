@@ -1,6 +1,5 @@
 import type { EntryGenerator, PageServerLoad } from './$types'
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import { contentIndex, HOME_SLUG } from '$lib/server/content'
 import { loadContent } from '$lib/server/loadContent'
 
 // navItems come from the root layout load
@@ -9,8 +8,10 @@ export const load: PageServerLoad = async ({ params }) => {
 }
 
 export const entries: EntryGenerator = async () => {
-  const contentDir = path.resolve('content')
-  const files = await fs.readdir(contentDir)
-  // Only .md files, strip .md extension for slug
-  return files.filter(f => f.endsWith('.md')).map(f => ({ slug: f.replace(/\.md$/, '') }))
+  const index = await contentIndex()
+
+  // The homepage has its own route, so it is not one of this route's entries.
+  return index
+    .filter(entry => entry.slug !== HOME_SLUG)
+    .map(entry => ({ slug: entry.slug }))
 }

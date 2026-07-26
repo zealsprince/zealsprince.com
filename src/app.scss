@@ -3,7 +3,23 @@
 // Colours, --border-radius and the --gallery-* pair are not set here. They come
 // from src/lib/palettes.ts, emitted per page as a light/dark pair.
 :root {
-  --content-text-max-width: 920px;
+  // The centered page container, and the reading measure inside it. Prose is
+  // capped in ch rather than px so the line length follows the font, which is
+  // what actually governs whether a line is comfortable to read.
+  --page-max: 1180px;
+  --measure: 68ch;
+
+  // One spacing scale for the whole page, so vertical rhythm is a choice from
+  // a set rather than a fresh guess at every block.
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 9rem;
 
   --font-family: "Commissioner", sans-serif;
 
@@ -28,10 +44,22 @@
   --level-1: color-mix(in srgb, var(--color-primary) 28%, var(--color-secondary));
 }
 
+// Without this, any element combining a percentage width with padding overflows
+// its parent. That is what pushed the page 80px wider than the viewport and,
+// because the document was then wider than the window, left every centred block
+// sitting off-centre against the screen.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family);
+  // A stray overflow should not turn into a horizontally scrollable page
+  overflow-x: hidden;
 }
 
 a {
@@ -50,13 +78,28 @@ a {
   z-index: 100;
 }
 
+// Centered page container. Everything that is not full-bleed sits in one.
+.shell {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+
+  @media (min-width: 600px) {
+    padding-inline: var(--space-lg);
+  }
+}
+
 .markdown {
-  line-height: 1.5rem;
+  // Unitless, so it scales with the element rather than pinning every size to
+  // the same 1.5rem step the way a length does.
+  line-height: 1.7;
 
   h1, h2, h3, h4, h5, h6 {
     color: var(--color-text);
     font-weight: var(--font-weight-light);
     text-transform: uppercase;
+    line-height: 1.2;
 
     display: flex;
     align-items: center;
@@ -66,21 +109,91 @@ a {
       flex: 1;
       height: 1px;
       background-color: var(--color-secondary);
-      margin-left: 1rem;
+      margin-left: var(--space-sm);
     }
   }
 
+  // Space above a heading is what creates sections. Far more of it than below,
+  // so a heading binds to the text it introduces instead of floating between.
   h2, h3, h4, h5, h6 {
-    margin-top: 2.5rem;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
   }
 
   h1 {
     font-size: var(--font-size-md);
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+  }
+
+  h2 { font-size: calc(var(--font-size-md) * 0.72); }
+  h3 { font-size: calc(var(--font-size-md) * 0.58); }
+
+  p, ul, ol, table, pre, blockquote {
+    margin-block: 0 var(--space-md);
+  }
+
+  // The opening paragraph carries the page. Giving it its own size is the
+  // cheapest way to make a page read as composed rather than as a text dump.
+  > p:first-of-type {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-primary);
+  }
+
+  li {
+    margin-bottom: var(--space-2xs);
+  }
+
+  blockquote {
+    margin-inline: 0;
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--color-link);
+    color: var(--color-primary);
+    font-size: 1.1rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+
+    th, td {
+      text-align: left;
+      padding: var(--space-2xs) var(--space-sm) var(--space-2xs) 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 50%, transparent);
+    }
+
+    th {
+      font-weight: var(--font-weight-normal);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
+  }
+
+  // Wide tables scroll inside their own box rather than widening the page
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
   }
 
   pre {
-    background: rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+    background: color-mix(in srgb, var(--color-secondary) 20%, transparent);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm);
     overflow: auto;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-secondary);
+    margin-block: var(--space-xl);
   }
 }
