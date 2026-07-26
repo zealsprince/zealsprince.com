@@ -1,12 +1,16 @@
 <script lang="ts">
   import type { Frontmatter, GallerySection, RawLink } from '$types/Content'
+  import { theme } from '$/lib/client/theme.svelte'
+  import { getPalette, paletteStyleTag } from '$/lib/palettes'
+  import { absolute, SITE_DESCRIPTION, SITE_IMAGE, SITE_LOCALE, SITE_NAME, SITE_ORIGIN } from '$/lib/site'
   import { SceneName } from '$/types/Scene'
-  import { base } from '$app/paths'
+  import { page } from '$app/state'
   import { onMount } from 'svelte'
   import { fly } from 'svelte/transition'
   import Content from './Content.svelte'
   import Gallery from './Gallery.svelte'
   import Links from './Links.svelte'
+  import ThemeToggle from './ThemeToggle.svelte'
   import Threalte from './Threlte.svelte'
 
   interface Props {
@@ -33,9 +37,11 @@
       : 'zealsprince',
   )
   const pageDescription = $derived(
-    data.frontmatter?.description
-    ?? 'Andrew Lake (zealsprince) - software engineer, architect and digital artist.',
+    data.frontmatter?.description ?? SITE_DESCRIPTION,
   )
+  const pageImage = $derived(absolute(data.frontmatter?.image ?? SITE_IMAGE))
+  // page.url.pathname already carries the trailing slash from the kit config
+  const canonical = $derived(`${SITE_ORIGIN}${page.url.pathname}`)
 
   // Variables for non-editor mode
   let content = $state('')
@@ -45,21 +51,19 @@
     id: string
   }> = $state([])
   let gallery: GallerySection[] = $state([])
-  let styleClass = $state('')
-  let customStyle = $state('')
   let minifyHeader: boolean = $state(false)
   let contentBody: HTMLElement | undefined = $state() // Reference to the content body element
+
+  const styleClass = $derived(data.frontmatter?.style ?? '')
 
   // Scene is used in both modes
   const scene: SceneName = $derived((data.scene as SceneName) ?? SceneName.SceneIndex)
 
+  // Drives the scene mesh colour and the theme-color meta tag. The CSS custom
+  // properties come from paletteStyleTag, which emits both themes at once.
+  const palette = $derived(getPalette(data.frontmatter?.style, theme.current))
+
   $effect(() => {
-    styleClass = data.frontmatter?.style ? `${data.frontmatter.style}` : ''
-
-    customStyle = data.frontmatter?.style
-      ? `${base}/styles/content/${data.frontmatter.style}.css`
-      : ''
-
     if (!editor) {
       content = data.html || ''
       components = data.components || []
@@ -106,26 +110,44 @@
 <svelte:head>
   <title>{pageTitle}</title>
   <meta name="description" content={pageDescription} />
+  <link rel="canonical" href={canonical} />
+
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={pageDescription} />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="zealsprince" />
-</svelte:head>
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content={SITE_LOCALE} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={pageImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={pageTitle} />
 
-{#if customStyle}
-  <link rel="stylesheet" href={customStyle} />
-{/if}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+  <meta name="twitter:image" content={pageImage} />
+  <meta name="theme-color" content={palette.background} />
+
+  <!-- Page palette, both themes. Inline so it lands before first paint,
+       unlike the stylesheet link this replaced. -->
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -- generated from a static palette map -->
+  {@html paletteStyleTag(styleClass)}
+</svelte:head>
 
 {#if editor}
   <!-- Editor Mode: Only Threalte, configured for editing -->
   <main class="editor-mode">
-    <Threalte {scene} editorModeActive={true} />
+    <Threalte {scene} editorModeActive={true} sceneColor={palette.scene} />
   </main>
 {:else}
   <!-- Default Content Display -->
   <main class={styleClass}>
     <div class="scene">
-      <Threalte {scene} />
+      <Threalte {scene} sceneColor={palette.scene} />
+    </div>
+    <div class="theme-control">
+      <ThemeToggle />
     </div>
     {#if !minifyHeader}
       <div
@@ -211,10 +233,18 @@
     }
   }
 
+  .theme-control {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.75rem;
+    z-index: 26;
+  }
+
   .heading-fixed {
     position: fixed;
     top: 1.5rem;
-    right: 2rem;
+    /* Clears the theme toggle sitting in the same corner */
+    right: 4.75rem;
     color: var(--color-primary);
     text-align: right;
     max-width: 70vw;

@@ -1,13 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap");
 
+// Colours, --border-radius and the --gallery-* pair are not set here. They come
+// from src/lib/palettes.ts, emitted per page as a light/dark pair.
 :root {
   --content-text-max-width: 920px;
-
-  --color-background: #fff;
-  --color-text: #191a19;
-  --color-link: #ee184a;
-  --color-primary: #000000;
-  --color-secondary: #191a19;
 
   --font-family: "Commissioner", sans-serif;
 
@@ -21,11 +17,6 @@
   --font-weight-bold: 700;
   --font-weight-normal: 400;
   --font-weight-light: 100;
-
-  --border-radius: 0.5rem;
-
-  --gallery-mix-expression: color-mix(in srgb, var(--color-background) 100%, transparent);
-  --gallery-img-padding: 0.4rem;
 }
 
 body {

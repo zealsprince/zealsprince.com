@@ -23,6 +23,7 @@ export interface Frontmatter {
   navigation?: string
   heading?: string
   description?: string // Meta description used for SEO and social embeds
+  image?: string // Social card, root-relative or absolute. Falls back to SITE_IMAGE
   date?: string // Consider using Date if parsed and formatting in component
   scene?: string | null
   style?: string

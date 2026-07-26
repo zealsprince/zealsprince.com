@@ -10,15 +10,27 @@
     scene?: SceneName
     initialMode?: 'studio' | 'theatre' | 'viewer'
     editorModeActive?: boolean
+    /** Mesh colour, driven by the page palette and active theme */
+    sceneColor?: string
   }
 
-  const { scene = 'SceneIndex' as SceneName, initialMode = 'viewer', editorModeActive = false }: Props = $props()
+  const {
+    scene = 'SceneIndex' as SceneName,
+    initialMode = 'viewer',
+    editorModeActive = false,
+    sceneColor = '#212429',
+  }: Props = $props()
 
+  // Deliberately $state + $effect rather than a writable $derived. The derived
+  // form builds fine but leaves Scene null in a production build, so the canvas
+  // never mounts. Dev is unaffected, which is what makes it easy to miss.
+  // eslint-disable-next-line svelte/prefer-writable-derived
   let mode = $state(initialMode)
 
   $effect(() => {
     mode = initialMode
   })
+
   let showDevBar = $state(false)
   let containerVisible = $state(false)
 
@@ -105,7 +117,7 @@
   })
 
   const currentMode = $derived(mode)
-  const sceneProps = $derived({ editor: editorModeActive, scrollY, mouseX, mouseY })
+  const sceneProps = $derived({ editor: editorModeActive, scrollY, mouseX, mouseY, color: sceneColor })
 </script>
 
 {#if showDevBar}

@@ -5,16 +5,35 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="color-scheme" content="dark light" />
+
+		<script>
+			// Runs before first paint so the page never flashes the wrong theme.
+			// Order: ?theme= override, then a saved choice, then the OS setting.
+			(function () {
+				var key = 'zealsprince-theme';
+				var override = new URL(window.location).searchParams.get('theme');
+				var theme = override === 'dark' || override === 'light' ? override : null;
+
+				if (!theme) {
+					try {
+						theme = localStorage.getItem(key);
+					} catch (e) {}
+				}
+
+				if (theme !== 'dark' && theme !== 'light') {
+					theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light';
+				}
+
+				document.documentElement.classList.remove('light', 'dark');
+				document.documentElement.classList.add(theme);
+			})();
+		</script>
+
 		%sveltekit.head%
 	</head>
 	<body>
 		<div style="display: contents">%sveltekit.body%</div>
-
-		<script>
-			const theme = new URL(window.location).searchParams.get('theme');
-
-			document.documentElement.classList.remove('light', 'dark');
-			document.documentElement.classList.add(theme || 'light');
-		</script>
 	</body>
 </html>

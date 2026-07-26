@@ -23,7 +23,6 @@
 
   type Cube = {
     position: [number, number, number]
-    color: string
     size: number
     wireframe: boolean
   }
@@ -42,7 +41,6 @@
         randomBetween(-8, 8),
         randomBetween(-4, -16),
       ],
-      color: '#212429',
       size: randomBetween(0.25, 1.5),
       wireframe: Math.random() > 0.5,
     }))
@@ -113,7 +111,7 @@
     >
       <T.BoxGeometry args={[1, 1, 1]} />
       <T.MeshBasicMaterial
-        color={cube.color}
+        color={props.color}
         transparent={false}
         reflectivity={1}
         wireframe={cube.wireframe}

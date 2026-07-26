@@ -20,7 +20,6 @@
 
   type Cube = {
     position: [number, number, number]
-    color: string
     size: number
   }
 
@@ -38,7 +37,6 @@
         randomBetween(-6, 6),
         randomBetween(-4, -12),
       ],
-      color: 'black',
       size: randomBetween(0.25, 1.5),
     }))
   }
@@ -91,7 +89,7 @@
     >
       <T.BoxGeometry args={[1, 1, 1]} />
       <T.MeshBasicMaterial
-        color={cube.color}
+        color={props.color}
         transparent={false}
         reflectivity={1}
       />
