@@ -332,22 +332,6 @@
     justify-content: flex-end;
     padding-bottom: calc(var(--space-lg) + 4.5rem);
     text-align: center;
-
-    /* The scene runs behind the type and the cube scenes in particular drift
-       right through it. A soft scrim guarantees the words read on every seed
-       and every frame, without flattening the scene at the edges. */
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(
-        ellipse 70% 45% at 50% 78%,
-        color-mix(in srgb, var(--color-background) 82%, transparent) 0%,
-        color-mix(in srgb, var(--color-background) 55%, transparent) 45%,
-        transparent 78%
-      );
-      pointer-events: none;
-    }
   }
 
   .hero-inner {
