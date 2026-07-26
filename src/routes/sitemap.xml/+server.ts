@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { pageUrl } from '$lib/site'
+import { isoDate, pageUrl } from '$lib/site'
 import matter from 'gray-matter'
 
 export const prerender = true
@@ -9,20 +9,6 @@ interface Entry {
   url: string
   lastmod?: string
   priority: string
-}
-
-// gray-matter turns an unquoted `date:` into a Date, a quoted one stays a string
-function isoDate(value: unknown): string | undefined {
-  if (value instanceof Date && !Number.isNaN(value.valueOf()))
-    return value.toISOString().slice(0, 10)
-
-  if (typeof value === 'string') {
-    const parsed = new Date(value)
-    if (!Number.isNaN(parsed.valueOf()))
-      return parsed.toISOString().slice(0, 10)
-  }
-
-  return undefined
 }
 
 export async function GET() {

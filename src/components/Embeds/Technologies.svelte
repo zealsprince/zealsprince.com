@@ -1,5 +1,8 @@
 <script lang="ts">
+  import type { Skill } from '$/lib/data/skills'
   import type { Component } from 'svelte'
+  import { TIER_WIDTH, tierColor } from '$/lib/data/proficiency'
+  import { SKILL_CATEGORY_ORDER, SKILL_LEVELS, SKILLS } from '$/lib/data/skills'
 
   import {
     SiApache,
@@ -77,14 +80,6 @@
     Zap,
   } from '@lucide/svelte'
   import Button from '../Button.svelte'
-
-  // Define the skill data structure
-  interface Skill {
-    name: string
-    level: 'exceptional' | 'outstanding' | 'advanced' | 'good' | 'basic'
-    category: string
-    icon?: string // Icon key for mapping
-  }
 
   // Map icon names to actual Svelte components
   const iconMap: Record<string, Component | any> = {
@@ -198,373 +193,7 @@
     skills?: Skill[]
   }
 
-  // Default skills - you can override this via props
-  const { skills = [
-    // Programming Languages - Exceptional/Outstanding
-    { name: 'Go', level: 'exceptional', category: 'Languages', icon: 'go' },
-    {
-      name: 'Python',
-      level: 'exceptional',
-      category: 'Languages',
-      icon: 'python',
-    },
-    {
-      name: 'TypeScript',
-      level: 'exceptional',
-      category: 'Languages',
-      icon: 'typescript',
-    },
-    {
-      name: 'JavaScript',
-      level: 'exceptional',
-      category: 'Languages',
-      icon: 'javascript',
-    },
-    { name: 'C#', level: 'exceptional', category: 'Languages', icon: 'csharp' },
-    { name: 'Java', level: 'outstanding', category: 'Languages', icon: 'java' },
-    { name: 'Lua', level: 'exceptional', category: 'Languages', icon: 'lua' },
-    { name: 'PHP', level: 'exceptional', category: 'Languages', icon: 'php' },
-    {
-      name: 'Bash/Zsh',
-      level: 'exceptional',
-      category: 'Languages',
-      icon: 'bash',
-    },
-    { name: 'Deno', level: 'outstanding', category: 'Languages', icon: 'deno' },
-
-    // Programming Languages - Advanced
-    {
-      name: 'C++',
-      level: 'outstanding',
-      category: 'Languages',
-      icon: 'cplusplus',
-    },
-    { name: 'Rust', level: 'advanced', category: 'Languages', icon: 'rust' },
-    { name: 'Dart', level: 'advanced', category: 'Languages', icon: 'dart' },
-    { name: 'Ruby', level: 'advanced', category: 'Languages', icon: 'ruby' },
-    {
-      name: 'Crystal',
-      level: 'advanced',
-      category: 'Languages',
-      icon: 'default',
-    },
-    { name: 'Elm', level: 'advanced', category: 'Languages', icon: 'default' },
-    { name: 'Haxe', level: 'advanced', category: 'Languages', icon: 'default' },
-
-    // Web Technologies
-    { name: 'Vue.js', level: 'exceptional', category: 'Web', icon: 'vue' },
-    { name: 'React', level: 'exceptional', category: 'Web', icon: 'react' },
-    { name: 'Next.js', level: 'exceptional', category: 'Web', icon: 'nextjs' },
-    { name: 'Node.js', level: 'exceptional', category: 'Web', icon: 'nodejs' },
-
-    {
-      name: 'Electron',
-      level: 'advanced',
-      category: 'Web',
-      icon: 'electron',
-    },
-    { name: 'Three.js', level: 'advanced', category: 'Web', icon: 'threejs' },
-    { name: 'p5.js', level: 'outstanding', category: 'Web', icon: 'p5js' },
-    { name: 'Flask', level: 'exceptional', category: 'Web', icon: 'flask' },
-    { name: 'Sanic', level: 'outstanding', category: 'Web', icon: 'python' },
-
-    // Styling & CSS
-    {
-      name: 'CSS/SCSS',
-      level: 'exceptional',
-      category: 'Styling',
-      icon: 'css',
-    },
-    {
-      name: 'Tailwind',
-      level: 'exceptional',
-      category: 'Styling',
-      icon: 'tailwind',
-    },
-    {
-      name: 'Bootstrap',
-      level: 'good',
-      category: 'Styling',
-      icon: 'bootstrap',
-    },
-
-    // Databases
-    {
-      name: 'PostgreSQL',
-      level: 'exceptional',
-      category: 'Database',
-      icon: 'postgresql',
-    },
-    {
-      name: 'MongoDB',
-      level: 'outstanding',
-      category: 'Database',
-      icon: 'mongodb',
-    },
-    {
-      name: 'GraphQL',
-      level: 'outstanding',
-      category: 'Database',
-      icon: 'graphql',
-    },
-    {
-      name: 'ClickHouse',
-      level: 'exceptional',
-      category: 'Database',
-      icon: 'clickhouse',
-    },
-    {
-      name: 'ElasticSearch',
-      level: 'good',
-      category: 'Database',
-      icon: 'elasticsearch',
-    },
-    { name: 'ChromaDB', level: 'good', category: 'Database', icon: 'database' },
-    {
-      name: 'AWS RDS',
-      level: 'outstanding',
-      category: 'Database',
-      icon: 'aws',
-    },
-    {
-      name: 'Redis',
-      level: 'outstanding',
-      category: 'Database',
-      icon: 'redis',
-    },
-
-    // DevOps & Infrastructure
-    {
-      name: 'Docker',
-      level: 'exceptional',
-      category: 'DevOps',
-      icon: 'docker',
-    },
-    {
-      name: 'Kubernetes',
-      level: 'outstanding',
-      category: 'DevOps',
-      icon: 'kubernetes',
-    },
-    { name: 'Nginx', level: 'outstanding', category: 'DevOps', icon: 'nginx' },
-    { name: 'Apache', level: 'good', category: 'DevOps', icon: 'apache' },
-    {
-      name: 'GitHub Actions',
-      level: 'exceptional',
-      category: 'DevOps',
-      icon: 'githubactions',
-    },
-    {
-      name: 'Concourse CI',
-      level: 'outstanding',
-      category: 'DevOps',
-      icon: 'concourse',
-    },
-
-    // Hypervisors & Cloud Platforms
-    { name: 'AWS', level: 'exceptional', category: 'Hypervisors', icon: 'aws' },
-    {
-      name: 'Fly.io',
-      level: 'exceptional',
-      category: 'Hypervisors',
-      icon: 'flyio',
-    },
-    {
-      name: 'DigitalOcean',
-      level: 'exceptional',
-      category: 'Hypervisors',
-      icon: 'digitalocean',
-    },
-    {
-      name: 'Azure',
-      level: 'advanced',
-      category: 'Hypervisors',
-      icon: 'azure',
-    },
-    { name: 'GCP', level: 'good', category: 'Hypervisors', icon: 'gcp' },
-
-    // Tools & APIs
-    {
-      name: 'Postman',
-      level: 'outstanding',
-      category: 'Tools',
-      icon: 'postman',
-    },
-    {
-      name: 'Insomnia',
-      level: 'outstanding',
-      category: 'Tools',
-      icon: 'insomnia',
-    },
-    {
-      name: 'OpenAPI',
-      level: 'outstanding',
-      category: 'Tools',
-      icon: 'openapi',
-    },
-    {
-      name: 'WebSockets',
-      level: 'outstanding',
-      category: 'Tools',
-      icon: 'websockets',
-    },
-    { name: 'Kafka', level: 'advanced', category: 'Tools', icon: 'kafka' },
-    { name: 'AWS SQS', level: 'good', category: 'Tools', icon: 'sqs' },
-
-    // Project Management
-    {
-      name: 'Trello',
-      level: 'exceptional',
-      category: 'Management',
-      icon: 'trello',
-    },
-    {
-      name: 'Jira',
-      level: 'exceptional',
-      category: 'Management',
-      icon: 'jira',
-    },
-    {
-      name: 'Asana',
-      level: 'outstanding',
-      category: 'Management',
-      icon: 'asana',
-    },
-    {
-      name: 'YouTrack',
-      level: 'exceptional',
-      category: 'Management',
-      icon: 'youtrack',
-    },
-
-    // Monitoring
-    {
-      name: 'Grafana',
-      level: 'exceptional',
-      category: 'Monitoring',
-      icon: 'grafana',
-    },
-    {
-      name: 'DataDog',
-      level: 'outstanding',
-      category: 'Monitoring',
-      icon: 'datadog',
-    },
-    {
-      name: 'CloudWatch',
-      level: 'outstanding',
-      category: 'Monitoring',
-      icon: 'cloudwatch',
-    },
-
-    // Creative & ML
-    {
-      name: 'PyTorch',
-      level: 'good',
-      category: 'ML/AI',
-      icon: 'pytorch',
-    },
-    {
-      name: 'TensorFlow',
-      level: 'good',
-      category: 'ML/AI',
-      icon: 'tensorflow',
-    },
-    {
-      name: 'Diffusers',
-      level: 'advanced',
-      category: 'ML/AI',
-      icon: 'diffusers',
-    },
-    {
-      name: 'Transformers',
-      level: 'advanced',
-      category: 'ML/AI',
-      icon: 'transformers',
-    },
-    {
-      name: 'Blender',
-      level: 'exceptional',
-      category: 'Creative',
-      icon: 'blender',
-    },
-    {
-      name: 'Unity',
-      level: 'exceptional',
-      category: 'Creative',
-      icon: 'unity',
-    },
-    {
-      name: 'Unreal Engine',
-      level: 'good',
-      category: 'Creative',
-      icon: 'unreal',
-    },
-    {
-      name: 'Godot',
-      level: 'advanced',
-      category: 'Creative',
-      icon: 'godot',
-    },
-    {
-      name: 'LOVE2D',
-      level: 'outstanding',
-      category: 'Creative',
-      icon: 'love2d',
-    },
-    {
-      name: 'Adobe CC',
-      level: 'exceptional',
-      category: 'Creative',
-      icon: 'adobe',
-    },
-    { name: 'Figma', level: 'advanced', category: 'Creative', icon: 'figma' },
-
-    // Mobile
-    {
-      name: 'Flutter',
-      level: 'outstanding',
-      category: 'Mobile',
-      icon: 'flutter',
-    },
-    { name: 'Cordova', level: 'advanced', category: 'Mobile', icon: 'cordova' },
-  ] }: Props = $props()
-
-  // Color mapping for proficiency levels
-  const levelColors = {
-    exceptional: 'var(--color-primary)',
-    outstanding: '#2563eb',
-    advanced: '#059669',
-    good: '#d97706',
-    basic: '#dc2626',
-  }
-
-  // Width mapping for visual bars
-  const levelWidths = {
-    exceptional: '100%',
-    outstanding: '90%',
-    advanced: '75%',
-    good: '60%',
-    basic: '40%',
-  }
-
-  // Level display names
-  const levelNames = {
-    exceptional: 'Exceptional',
-    outstanding: 'Outstanding',
-    advanced: 'Advanced',
-    good: 'Good',
-    basic: 'Basic',
-  }
-
-  // Level priority for sorting (higher number = higher skill)
-  const levelPriority = {
-    exceptional: 5,
-    outstanding: 4,
-    advanced: 3,
-    good: 2,
-    basic: 1,
-  }
+  const { skills = SKILLS }: Props = $props()
 
   // Group and sort skills by category in a single derived
   const groupedSkills = $derived(
@@ -580,33 +209,20 @@
     ),
   )
 
+  // Strongest first within each category
   const sortedGroupedSkills = $derived(
     Object.fromEntries(
       Object.entries(groupedSkills).map(([cat, catSkills]) => [
         cat,
-        [...catSkills].sort((a, b) => levelPriority[b.level] - levelPriority[a.level]),
+        [...catSkills].sort(
+          (a, b) => SKILL_LEVELS[b.level].tier - SKILL_LEVELS[a.level].tier,
+        ),
       ]),
     ),
   )
 
-  // Category order for consistent display
-  const categoryOrder = [
-    'Languages',
-    'Web',
-    'Styling',
-    'Database',
-    'DevOps',
-    'Hypervisors',
-    'Tools',
-    'Management',
-    'Monitoring',
-    'ML/AI',
-    'Creative',
-    'Mobile',
-  ]
-
   const orderedCategories = $derived(
-    categoryOrder.filter(cat => sortedGroupedSkills[cat]?.length > 0),
+    SKILL_CATEGORY_ORDER.filter(cat => sortedGroupedSkills[cat]?.length > 0),
   )
 
   // Track expanded state for each category
@@ -636,6 +252,7 @@
         <h3 class="category-title">{category}</h3>
         <div class="skills-list">
           {#each getVisibleSkills(category) as skill (skill.name)}
+            {@const level = SKILL_LEVELS[skill.level]}
             <div class="skill-item">
               <div class="skill-header">
                 {#if skill.icon}
@@ -645,19 +262,14 @@
                   </span>
                 {/if}
                 <span class="skill-name">{skill.name}</span>
-                <span
-                  class="skill-level"
-                  style="color: {levelColors[skill.level]}"
-                >
-                  {levelNames[skill.level]}
+                <span class="skill-level" style="color: {tierColor(level.tier)}">
+                  {level.label}
                 </span>
               </div>
               <div class="skill-bar">
                 <div
                   class="skill-progress"
-                  style="width: {levelWidths[
-                    skill.level
-                  ]}; background-color: {levelColors[skill.level]}"
+                  style="width: {TIER_WIDTH[level.tier]}; background-color: {tierColor(level.tier)}"
                 ></div>
               </div>
             </div>

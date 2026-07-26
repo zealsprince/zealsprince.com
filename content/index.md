@@ -1,4 +1,5 @@
 ---
+title: Andrew Lake - Software Engineer and Architect
 navigation: Andrew Lake
 heading: Andrew Lake
 description: Andrew Lake - software engineer and architect with over a decade of experience, from indie games to co-founding a startup. Also a digital artist and music producer.

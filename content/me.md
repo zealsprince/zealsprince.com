@@ -1,4 +1,5 @@
 ---
+title: zealsprince - Game Development, Digital Art and Music
 navigation: zealsprince
 heading: zealsprince
 description: zealsprince is my creative handle - game development, mods, digital art, animation and music. Cover art for artists on Monstercat, NCS and more.
@@ -27,19 +28,20 @@ links:
     icon: 500px
     url: https://500px.com/p/zealsprince?view=photos
 gallery:
-  - Artwork:
-    - name: Lethal Company - Community Art Competition
-      image: https://i.imgur.com/3fyVDTi.png
-      url: https://i.imgur.com/3fyVDTi.png
-    - name: Silent Poets - Asylum for the Feeling Cover Art
-      image: https://i.imgur.com/G8yNJ42.jpeg
-      url: https://i.imgur.com/G8yNJ42.jpeg
-    - name: Camellia - PLANET_SHAPER Cover Art
-      image: https://i.imgur.com/64ajYS7.jpeg
-      url: https://i.imgur.com/64ajYS7.jpeg
-    - name: A_Rival - Venus Cover Art
-      image: https://i.imgur.com/5pjh6DM.jpeg
-      url: https://i.imgur.com/5pjh6DM.jpeg
+  - name: Artwork
+    items:
+      - name: Lethal Company - Community Art Competition
+        image: https://i.imgur.com/3fyVDTi.png
+        url: https://i.imgur.com/3fyVDTi.png
+      - name: Silent Poets - Asylum for the Feeling Cover Art
+        image: https://i.imgur.com/G8yNJ42.jpeg
+        url: https://i.imgur.com/G8yNJ42.jpeg
+      - name: Camellia - PLANET_SHAPER Cover Art
+        image: https://i.imgur.com/64ajYS7.jpeg
+        url: https://i.imgur.com/64ajYS7.jpeg
+      - name: A_Rival - Venus Cover Art
+        image: https://i.imgur.com/5pjh6DM.jpeg
+        url: https://i.imgur.com/5pjh6DM.jpeg
 ---
 
 # Creative Demon

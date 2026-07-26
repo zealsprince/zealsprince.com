@@ -102,9 +102,12 @@ export const palettes: Record<string, PalettePair> = {
   },
 }
 
+export function getPalettePair(style: string | undefined): PalettePair {
+  return (style && palettes[style]) || palettes.default
+}
+
 export function getPalette(style: string | undefined, theme: Theme): Palette {
-  const pair = (style && palettes[style]) || palettes.default
-  return pair[theme]
+  return getPalettePair(style)[theme]
 }
 
 /**
@@ -113,7 +116,7 @@ export function getPalette(style: string | undefined, theme: Theme): Palette {
  * paint and toggling is a class swap rather than a re-render.
  */
 export function paletteStyleTag(style: string | undefined): string {
-  const pair = (style && palettes[style]) || palettes.default
+  const pair = getPalettePair(style)
 
   return `<style>`
     + `:root.light{${paletteToCss(pair.light)}}`

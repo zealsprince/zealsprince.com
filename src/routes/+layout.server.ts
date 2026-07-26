@@ -1,18 +1,10 @@
+import type { NavItem } from '$types/Content'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import matter from 'gray-matter'
 
 export const prerender = true
 export const trailingSlash = 'always'
-
-export interface NavItem {
-  slug: string
-  title: string
-  navigation: string
-  order: number
-  style: string
-  category: string
-}
 
 // Loaded here rather than per-page so every route, including the error page,
 // gets the same menu without each one re-reading the content directory.
@@ -34,7 +26,9 @@ export async function load() {
 
     navItems.push({
       slug: file.replace(/\.md$/, ''),
-      title: data.title ?? '',
+      // The menu wants the short name, so it falls back to the hero heading
+      // rather than `title`, which is the long SEO one.
+      heading: data.heading ?? '',
       navigation: data.navigation ?? '',
       order: data.order ?? 999,
       style: data.style ?? '',

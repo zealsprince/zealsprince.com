@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Frontmatter } from '$/types/Content'
+  import type { NavItem } from '$/types/Content'
   import { goto } from '$app/navigation'
   import { page } from '$app/state'
   import { Box, Rss, UserRound } from '@lucide/svelte'
@@ -7,7 +7,7 @@
   import { fade, fly } from 'svelte/transition'
 
   interface Props {
-    items?: Frontmatter[]
+    items?: NavItem[]
   }
 
   const { items = [] }: Props = $props()
@@ -110,7 +110,7 @@
                 e.preventDefault()
                 navTo(item.slug)
               }}
-              >{item.navigation ?? item.title}</a
+              >{item.navigation || item.heading}</a
             >
             <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}
@@ -133,7 +133,7 @@
                 e.preventDefault()
                 navTo(item.slug)
               }}
-              >{item.navigation ?? item.title}</a
+              >{item.navigation || item.heading}</a
             >
             <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}
@@ -156,7 +156,7 @@
                 e.preventDefault()
                 navTo(item.slug)
               }}
-              >{item.navigation ?? item.title}</a
+              >{item.navigation || item.heading}</a
             >
             <!-- eslint-enable svelte/no-navigation-without-resolve -->
           {/each}

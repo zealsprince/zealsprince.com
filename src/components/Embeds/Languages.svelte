@@ -1,74 +1,33 @@
 <script lang="ts">
-  // Define the language data structure
-  interface Language {
-    name: string
-    level: 'native' | 'fluent' | 'advanced' | 'intermediate' | 'basic'
-    flag?: string // Optional emoji flag
-  }
+  import type { Language } from '$/lib/data/languages'
+  import { LANGUAGE_LEVELS, LANGUAGES } from '$/lib/data/languages'
+  import { TIER_WIDTH, tierColor } from '$/lib/data/proficiency'
 
   interface Props {
     languages?: Language[]
   }
 
-  // Default languages - you can override this via props
-  const { languages = [
-    { name: 'German', level: 'native', flag: '🇩🇪' },
-    { name: 'English', level: 'native', flag: '🇨🇦' },
-    { name: 'French', level: 'fluent', flag: '🇫🇷' },
-    { name: 'Dutch', level: 'basic', flag: '🇳🇱' },
-    { name: 'Czech', level: 'basic', flag: '🇨🇿' },
-  ] }: Props = $props()
-
-  // Color mapping for proficiency levels
-  const levelColors = {
-    native: 'var(--color-primary)',
-    fluent: '#2563eb',
-    advanced: '#059669',
-    intermediate: '#d97706',
-    basic: '#dc2626',
-  }
-
-  // Width mapping for visual bars
-  const levelWidths = {
-    native: '100%',
-    fluent: '85%',
-    advanced: '70%',
-    intermediate: '55%',
-    basic: '40%',
-  }
-
-  // Level display names
-  const levelNames = {
-    native: 'Native',
-    fluent: 'Fluent',
-    advanced: 'Advanced',
-    intermediate: 'Intermediate',
-    basic: 'Basic',
-  }
+  const { languages = LANGUAGES }: Props = $props()
 </script>
 
 <div class="languages-container">
   <div class="languages-grid">
     {#each languages as language (language.name)}
+      {@const level = LANGUAGE_LEVELS[language.level]}
       <div class="language-item">
         <div class="language-header">
           {#if language.flag}
             <span class="language-flag">{language.flag}</span>
           {/if}
           <span class="language-name">{language.name}</span>
-          <span
-            class="language-level"
-            style="color: {levelColors[language.level]}"
-          >
-            {levelNames[language.level]}
+          <span class="language-level" style="color: {tierColor(level.tier)}">
+            {level.label}
           </span>
         </div>
         <div class="language-bar">
           <div
             class="language-progress"
-            style="width: {levelWidths[
-              language.level
-            ]}; background-color: {levelColors[language.level]}"
+            style="width: {TIER_WIDTH[level.tier]}; background-color: {tierColor(level.tier)}"
           ></div>
         </div>
       </div>

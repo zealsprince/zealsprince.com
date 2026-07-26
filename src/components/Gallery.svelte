@@ -9,10 +9,10 @@
 </script>
 
 {#if images.length}
-  {#each images as section (section.name)}
+  {#each images as section, index (section.name ?? index)}
     <div class="gallery">
-      {#if section.name && section.showName !== false}
-        <h1 class="gallery-name">{section.name}</h1>
+      {#if section.name}
+        <h2 class="gallery-name">{section.name}</h2>
       {/if}
       <div class="gallery-section">
         {#each section.items as img (img.image)}

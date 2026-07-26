@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { ContentDirective } from '$types/Content'
   import technologies from '$/components/Embeds/Technologies.svelte'
 
   import languages from '$components/Embeds/Languages.svelte'
@@ -7,11 +8,7 @@
 
   interface Props {
     html: string
-    components?: Array<{
-      name: string
-      props: Record<string, any>
-      id: string
-    }>
+    components?: ContentDirective[]
   }
 
   const { html, components = [] }: Props = $props()
@@ -97,15 +94,12 @@
 </div>
 
 <style>
+  /* Now that the markdown server-renders, these ship in the HTML and get
+     swapped out on mount. Reserve the space but stay invisible, so the page
+     does not flash a row of empty dashed boxes before hydration. */
   .dynamic-content :global(.component-placeholder) {
     min-height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed var(--color-secondary);
-    border-radius: 0.5rem;
     margin: 1rem 0;
-    opacity: 0.5;
   }
 
   .dynamic-content :global(.component-error) {

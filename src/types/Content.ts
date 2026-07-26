@@ -12,41 +12,62 @@ export interface GalleryItem {
   url?: string // Optional URL for the item
 }
 
-// New type for gallery sections with title and items
+/** A titled group of gallery items. Omit `name` for an untitled group. */
 export interface GallerySection {
-  name: string
-  showName?: boolean // Added to control title visibility
+  name?: string
   items: GalleryItem[]
 }
 
+export type Category = 'About' | 'Projects' | 'Blog'
+
 export interface Frontmatter {
+  /** Document title, used verbatim. Falls back to `heading` plus the site name. */
+  title?: string
+  /** Menu label. The shortest of the three names a page has. */
   navigation?: string
+  /** Hero type on the page itself. */
   heading?: string
   description?: string // Meta description used for SEO and social embeds
   image?: string // Social card, root-relative or absolute. Falls back to SITE_IMAGE
-  date?: string // Consider using Date if parsed and formatting in component
+  date?: string | Date // Unquoted in YAML this arrives as a Date, quoted as a string
   scene?: string | null
   style?: string
   order?: number
-  category?: 'About' | 'Projects' | 'Blog' // Category field for content organization
-  hidden?: boolean // Whether to hide the item from navigation
+  category?: Category // Category field for content organization
+  hidden?: boolean // Keeps the page out of navigation, the sitemap and search results
   links?: RawLink[]
-  gallery?: Array<Record<string, Array<GalleryItem>>> // Only support sectioned galleries now
+  gallery?: GallerySection[]
   [key: string]: any // For any other properties in frontmatter
+}
+
+/** A page as the navigation menu sees it, built from frontmatter at build time. */
+export interface NavItem {
+  slug: string
+  heading: string
+  navigation: string
+  order: number
+  style: string
+  category: Category
+}
+
+export interface ContentDirective {
+  name: string
+  props: Record<string, any>
+  id: string
 }
 
 export interface ContentData {
   html: string
-  gallery: GallerySection[] // Changed from GalleryItem[] to GallerySection[]
+  gallery: GallerySection[]
   frontmatter: Frontmatter
   scene: string | null
   links: RawLink[] // Raw links from frontmatter
-  components?: Array<{ name: string, props: Record<string, any>, id: string }> // Dynamic components
+  components?: ContentDirective[] // Dynamic components embedded in the markdown
 }
 
 // Data structure for page components, extending ContentData
 export interface PageData extends ContentData {
-  navItems: any[]
+  navItems: NavItem[]
 }
 
 // A link after it has been assigned an icon component

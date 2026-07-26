@@ -1,8 +1,20 @@
 <script lang="ts">
-  import type { Frontmatter, GallerySection, RawLink } from '$types/Content'
+  import type { ContentData, ContentDirective, GallerySection } from '$types/Content'
   import { theme } from '$/lib/client/theme.svelte'
-  import { getPalette, paletteStyleTag } from '$/lib/palettes'
-  import { absolute, SITE_DESCRIPTION, SITE_IMAGE, SITE_LOCALE, SITE_NAME, SITE_ORIGIN } from '$/lib/site'
+  import { getPalette, getPalettePair, paletteStyleTag } from '$/lib/palettes'
+  import { structuredDataTag } from '$/lib/schema'
+  import {
+    absolute,
+    isoDate,
+    resolvePageTitle,
+    SITE_AUTHOR,
+    SITE_DESCRIPTION,
+    SITE_IMAGE,
+    SITE_LOCALE,
+    SITE_NAME,
+    SITE_ORIGIN,
+    SITE_TWITTER,
+  } from '$/lib/site'
   import { SceneName } from '$/types/Scene'
   import { page } from '$app/state'
   import { onMount } from 'svelte'
@@ -14,43 +26,44 @@
   import Threalte from './Threlte.svelte'
 
   interface Props {
-    data: {
-      html: string
-      gallery: GallerySection[]
-      frontmatter: Frontmatter
-      scene: string | null
-      links: RawLink[]
-      components?: Array<{
-        name: string
-        props: Record<string, any>
-        id: string
-      }>
-    }
+    data: ContentData
     editor?: boolean
   }
 
   const { data, editor = false }: Props = $props()
 
-  const pageTitle = $derived(
-    data.frontmatter?.heading && data.frontmatter.heading !== 'zealsprince'
-      ? `${data.frontmatter.heading} - zealsprince`
-      : 'zealsprince',
-  )
+  const pageTitle = $derived(resolvePageTitle(data.frontmatter))
   const pageDescription = $derived(
     data.frontmatter?.description ?? SITE_DESCRIPTION,
   )
   const pageImage = $derived(absolute(data.frontmatter?.image ?? SITE_IMAGE))
   // page.url.pathname already carries the trailing slash from the kit config
   const canonical = $derived(`${SITE_ORIGIN}${page.url.pathname}`)
+  const isHome = $derived(page.url.pathname === '/')
 
-  // Variables for non-editor mode
-  let content = $state('')
-  let components: Array<{
-    name: string
-    props: Record<string, any>
-    id: string
-  }> = $state([])
-  let gallery: GallerySection[] = $state([])
+  // `hidden` keeps a page out of the menu and the sitemap, but the page is
+  // still prerendered and reachable, so it needs telling not to be indexed too.
+  const noindex = $derived(data.frontmatter?.hidden === true)
+
+  const isPost = $derived(data.frontmatter?.category === 'Blog')
+  const published = $derived(isoDate(data.frontmatter?.date))
+
+  const jsonLd = $derived(structuredDataTag({
+    frontmatter: data.frontmatter ?? {},
+    canonical,
+    title: pageTitle,
+    description: pageDescription,
+    image: pageImage,
+    isHome,
+  }))
+
+  // Derived, not copied into $state by an effect. Effects do not run during
+  // SSR, so the effect version prerendered every page with an empty body and
+  // only filled it in once the client hydrated.
+  const content = $derived(editor ? '' : (data.html ?? ''))
+  const components: ContentDirective[] = $derived(editor ? [] : (data.components ?? []))
+  const gallery: GallerySection[] = $derived(editor ? [] : (data.gallery ?? []))
+
   let minifyHeader: boolean = $state(false)
   let contentBody: HTMLElement | undefined = $state() // Reference to the content body element
 
@@ -59,22 +72,16 @@
   // Scene is used in both modes
   const scene: SceneName = $derived((data.scene as SceneName) ?? SceneName.SceneIndex)
 
-  // Drives the scene mesh colour and the theme-color meta tag. The CSS custom
-  // properties come from paletteStyleTag, which emits both themes at once.
+  // Drives the scene mesh colour. The CSS custom properties come from
+  // paletteStyleTag, which emits both themes at once.
   const palette = $derived(getPalette(data.frontmatter?.style, theme.current))
 
-  $effect(() => {
-    if (!editor) {
-      content = data.html || ''
-      components = data.components || []
-      gallery = data.gallery || []
-    }
-    else {
-      content = ''
-      components = []
-      gallery = []
-    }
-  })
+  // theme-color is emitted per scheme rather than following the toggle, because
+  // the pages are prerendered and a single reactive tag bakes in whichever
+  // theme the server happened to render. Media-scoped tags are right from first
+  // paint for anyone on their OS setting, which is nearly everyone. Someone who
+  // pins the opposite theme gets a browser chrome colour that lags the page.
+  const palettePair = $derived(getPalettePair(data.frontmatter?.style))
 
   function handleScroll() {
     if (editor)
@@ -110,11 +117,15 @@
 <svelte:head>
   <title>{pageTitle}</title>
   <meta name="description" content={pageDescription} />
+  <meta name="author" content={SITE_AUTHOR} />
   <link rel="canonical" href={canonical} />
+  {#if noindex}
+    <meta name="robots" content="noindex, follow" />
+  {/if}
 
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={pageDescription} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={isPost ? 'article' : 'website'} />
   <meta property="og:site_name" content={SITE_NAME} />
   <meta property="og:locale" content={SITE_LOCALE} />
   <meta property="og:url" content={canonical} />
@@ -122,17 +133,30 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content={pageTitle} />
+  {#if isPost}
+    <meta property="article:author" content={SITE_AUTHOR} />
+    {#if published}
+      <meta property="article:published_time" content={published} />
+    {/if}
+  {/if}
 
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content={SITE_TWITTER} />
+  <meta name="twitter:creator" content={SITE_TWITTER} />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={pageDescription} />
   <meta name="twitter:image" content={pageImage} />
-  <meta name="theme-color" content={palette.background} />
+
+  <meta name="theme-color" content={palettePair.light.background} media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content={palettePair.dark.background} media="(prefers-color-scheme: dark)" />
 
   <!-- Page palette, both themes. Inline so it lands before first paint,
        unlike the stylesheet link this replaced. -->
   <!-- eslint-disable-next-line svelte/no-at-html-tags -- generated from a static palette map -->
   {@html paletteStyleTag(styleClass)}
+
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -- JSON.stringify output with `<` escaped -->
+  {@html jsonLd}
 </svelte:head>
 
 {#if editor}

@@ -17,6 +17,15 @@
   --font-weight-bold: 700;
   --font-weight-normal: 400;
   --font-weight-light: 100;
+
+  // Proficiency ramp, strongest to weakest. Mixed from the page palette rather
+  // than fixed, so it follows the theme and every page style. Change the ramp
+  // here and both the languages and technologies readouts follow.
+  --level-5: var(--color-primary);
+  --level-4: color-mix(in srgb, var(--color-primary) 82%, var(--color-secondary));
+  --level-3: color-mix(in srgb, var(--color-primary) 64%, var(--color-secondary));
+  --level-2: color-mix(in srgb, var(--color-primary) 46%, var(--color-secondary));
+  --level-1: color-mix(in srgb, var(--color-primary) 28%, var(--color-secondary));
 }
 
 body {
